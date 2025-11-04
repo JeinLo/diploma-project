@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Йога — Тренировка 2 | SkyFitnessPro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="passing.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="index.html" class="logo">
+        <img src="./images/Logo.svg" alt="SkyFitnessPro" class="logo__img" />
+        <span class="logo__text">SkyFitnessPro</span>
+      </a>
+      <div class="user-menu">
+        <div class="user-avatar">
+          <img src="./images/avatar.svg" alt="Аватар" class="user-avatar-img">
+        </div>
+        <span class="user-name">Сергей</span>
+        <span class="user-arrow-wrapper">
+          <img src="./images/strelka.svg" alt="Стрелка" class="user-arrow">
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="container">
+
+      <!-- ЗАГОЛОВОК -->
+      <h1 class="lesson-title">Йога</h1>
+
+      <!-- ВИДЕО -->
+      <section class="video-section">
+        <div class="video-wrapper">
+          <video controls class="video-player">
+            <source src="./videos/yoga-lesson-2.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+          </video>
+          <div class="play-overlay">
+           <img src="./images/play.svg" alt="Play" class="play-icon">
+          </div>
+        </div>
+      </section>
+
+      <!-- УПРАЖНЕНИЯ -->
+      <section class="exercises-section">
+        <h2 class="exercises-title">Упражнения тренировки 2</h2>
+        <div class="exercises-grid">
+          <!-- 3 колонки -->
+          <div class="exercise-column">
+            <div class="exercise-item">Наклоны вперед <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Наклоны назад <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Поднятие ног, согнутых в коленях <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+          </div>
+
+          <div class="exercise-column">
+            <div class="exercise-item">Наклоны вперед <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Наклоны назад <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Поднятие ног, согнутых в коленях <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+          </div>
+
+          <div class="exercise-column">
+            <div class="exercise-item">Наклоны вперед <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Наклоны назад <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+            <div class="exercise-item">Поднятие ног, согнутых в коленях <span class="progress-value">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+          </div>
+        </div>
+
+        <!-- КНОПКА -->
+        <button class="btn btn--cta" id="complete-lesson">Заполнить свой прогресс</button>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="passing.js"></script>
+</body>
+</html>

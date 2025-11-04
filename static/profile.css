@@ -1,0 +1,432 @@
+/* === RESET & BASE === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #FFFFFF;
+  color: #333;
+  line-height: 1.5;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.container {
+  width: min(100% - 40px, 1200px);
+  margin-inline: auto;
+}
+
+/* === HEADER === */
+.header {
+  padding: 20px 0;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #000;
+}
+.logo__img {
+  width: 32px;
+  height: 32px;
+}
+
+/* === USER MENU === */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  position: relative;
+}
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.user-name {
+  width: 79px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #000;
+  text-align: right;
+  white-space: nowrap;
+}
+.user-arrow {
+  position: relative;
+  width: 13px;
+  height: 8px;
+  top: 1px;
+  left: -2px;
+}
+.user-arrow img {
+  width: 100%;
+  height: 100%;
+}
+
+/* === MAIN === */
+.main {
+  padding: 40px 0;
+}
+
+/* === PAGE TITLE === */
+.page-title,
+.section-title {
+  width: 810px;
+  height: 44px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+  font-size: 40px;
+  color: #000;
+  margin-bottom: 32px;
+}
+
+/* === PROFILE CARD === */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 67px -12px #00000021;
+  margin-bottom: 48px;
+  width: 1200px;
+  height: 257px;
+  max-width: 100%;
+}
+.profile-avatar {
+  width: 197px;
+  height: 197px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.profile-name {
+  width: 300px;
+  height: 35px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 32px;
+  color: #000;
+  margin: 0px 0px 30px 33px;
+}
+.profile-login {
+  width: 188px;
+  height: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #000000;
+  margin: 0px 0px 30px 33px;
+}
+
+/* Кнопка "Выйти" */
+.btn-logout {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 46px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 192px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0px 0px 30px 33px;
+}
+.btn-logout:hover {
+  background: #000000;
+  color: #ffffff;
+}
+.btn--logout-mobile {
+  display: none;
+  background: #BCEC30;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 46px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+/* === MY COURSES === */
+.my-courses {
+  margin-bottom: 60px;
+}
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+/* === COURSE CARD — ПОЛНОСТЬЮ ИЗ index.html === */
+.course-card {
+  background: white;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  height: 501px;
+  padding-bottom: 15px;
+}
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+.course-image-wrapper {
+  position: relative;
+  height: 325px;
+  overflow: hidden;
+  background: white;
+}
+.card__image {
+  width: 360px;
+  height: 325px;
+  object-fit: contain;
+  border-radius: 30px 30px 30px 30px;
+}
+
+/* КНОПКА УДАЛЕНИЯ — стиль из index.html */
+.card__play-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 26.67px;
+  height: 26.67px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.card__play-btn:hover {
+  transform: scale(1.2);
+}
+.card__play-btn img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+}
+
+.course-content {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.course-title {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #222;
+}
+.course-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #666;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
+.course-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: bottom;
+  padding-right: 6px;
+  color: #000000;
+}
+.course-meta-item img {
+  width: 16px;
+  height: 16px;
+}
+.course-link {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.course-link img {
+  width: 16px;
+  height: 16px;
+}
+
+/* === ПРОГРЕСС — СОХРАНЁН ПО ТВОИМ ТРЕБОВАНИЯМ === */
+.course-progress {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.progress-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #000000;
+  margin: 0;
+  order: 1;
+}
+.progress-bar {
+  height: 8px;
+  background: #E0E0E0;
+  border-radius: 4px;
+  overflow: hidden;
+  order: 2;
+}
+.progress-fill {
+  height: 100%;
+  background: #4A90E2;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* === КНОПКА — СОХРАНЕНА === */
+.course-btn {
+  background: #BCEC30;
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 46px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+.course-btn:hover {
+  background: #a8d62a;
+  transform: translateY(-2px);
+}
+
+/* === ПУСТОЕ СОСТОЯНИЕ === */
+.courses-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+  grid-column: 1 / -1;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+  .user-menu {
+    position: static;
+    gap: 12px;
+  }
+  .user-arrow {
+    position: static;
+    top: auto;
+    left: auto;
+  }
+  .profile-card {
+    width: 100%;
+  }
+}
+@media (max-width: 868px) {
+  .page-title,
+  .section-title {
+    width: auto;
+    font-size: 32px;
+    text-align: center;
+  }
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    width: 100%;
+    padding: 20px;
+  }
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+  }
+  .profile-name,
+  .profile-login,
+  .btn-logout {
+    margin-left: 0;
+    width: auto;
+    text-align: center;
+  }
+  .btn--logout-mobile {
+    display: block;
+  }
+  #logout-btn-desktop {
+    display: none;
+  }
+  .user-menu {
+    display: none;
+  }
+  .courses-grid {
+    grid-template-columns: 1fr;
+  }
+.course-card {
+  background: white;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  height: 501px;
+  padding-bottom: 15px;
+}
+}
+@media (max-width: 576px) {
+  .course-title {
+    font-size: 24px;
+  }
+}

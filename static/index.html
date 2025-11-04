@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SkyFitnessPro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,11 +16,13 @@
   <!-- HEADER -->
   <header class="header">
     <div class="container header__container">
-      <a href="#" class="logo">
-        <img src="Logo.svg" alt="SkyFitnessPro Logo" class="logo__img" />
-        <span class="logo__text">SkyFitnessPro</span>
-      </a>
-      <p class="header__tagline">Онлайн-тренировки для занятий дома</p>
+      <div class="logo-wrapper">
+        <a href="#" class="logo">
+          <img src="./images/Logo.svg" alt="SkyFitnessPro Logo" class="logo__img" />
+          <span class="logo__text">SkyFitnessPro</span>
+        </a>
+        <p class="header__tagline">Онлайн-тренировки для занятий дома</p>
+      </div>
       <button class="btn btn--login">Войти</button>
     </div>
   </header>
@@ -29,8 +36,11 @@
         <h1 class="hero__title">
           Начните заниматься спортом и улучшите качество жизни
         </h1>
-        <div class="badge">
-          Измени своё тело за полгода!
+        <div class="bubble-wrapper">    
+          <div class="speech-bubble">
+            Измени своё тело за полгода!
+          </div>
+          <img src="./images/str.svg" alt="Стрелка вниз" class="bubble-arrow-separate"> 
         </div>
       </div>
 
@@ -40,92 +50,138 @@
         <!-- Yoga -->
         <article class="card">
           <div class="card__image-wrapper">
-            <img src="yoga.jpg" alt="Йога" class="card__image" />
-            <button class="card__play-btn">+</button>
+            <img src="./images/image_1.svg" alt="Йога" class="card__image" />
+            <button class="card__play-btn">
+              <img src="./images/plus.svg" alt="Play" class="plus-icon" />
+            </button>
           </div>
           <div class="card__content">
             <h3 class="card__title">Йога</h3>
             <div class="card__meta">
-              <span class="card__duration">20-50 мин/день</span>
+              <div class="card__meta-badge card__meta-badge--calendar">
+                <img src="./images/icon_calendar.svg" alt=""> 25 дней
+              </div>
+              <div class="card__meta-badge card__meta-badge--time">
+                <img src="./images/icon_time.svg" alt=""> 20-50 мин/день
+              </div>
             </div>
-            <a href="#" class="card__link">Сложность</a>
+            <a href="course.html?course=yoga" class="card__link">
+              <div class="card__meta-badge card__meta-badge--difficulty">
+                <img src="./images/progress.svg" alt=""> Сложность
+              </div>
+            </a>
           </div>
         </article>
 
         <!-- Stretching -->
         <article class="card">
           <div class="card__image-wrapper">
-            <img src="stretching.jpg" alt="Стретчинг" class="card__image" />
-            <button class="card__play-btn">+</button>
+            <img src="./images/image_2.svg" alt="Стретчинг" class="card__image" />
+            <button class="card__play-btn">
+              <img src="./images/plus.svg" alt="Play" class="plus-icon" />
+            </button>
           </div>
           <div class="card__content">
             <h3 class="card__title">Стретчинг</h3>
             <div class="card__meta">
-              <span class="card__duration">25 дней</span>
-              <span class="card__duration">20-50 мин/день</span>
+              <div class="card__meta-badge card__meta-badge--calendar">
+                <img src="./images/icon_calendar.svg" alt=""> 25 дней
+              </div>
+              <div class="card__meta-badge card__meta-badge--time">
+                <img src="./images/icon_time.svg" alt=""> 20-50 мин/день
+              </div>
             </div>
-            <a href="#" class="card__link">Сложность</a>
+            <a href="course.html?course=stretching" class="card__link">
+              <div class="card__meta-badge card__meta-badge--difficulty">
+                <img src="./images/progress.svg" alt=""> Сложность
+              </div>
+            </a>
           </div>
         </article>
 
         <!-- Fitness -->
         <article class="card">
           <div class="card__image-wrapper">
-            <img src="fitness.jpg" alt="Фитнес" class="card__image" />
-            <button class="card__play-btn">+</button>
+            <img src="./images/image_3.svg" alt="Фитнес" class="card__image" />
+            <button class="card__play-btn">
+              <img src="./images/plus.svg" alt="Play" class="plus-icon" />
+            </button>
           </div>
           <div class="card__content">
             <h3 class="card__title">Фитнес</h3>
             <div class="card__meta">
-              <span class="card__duration">25 дней</span>
-              <span class="card__duration">20-50 мин/день</span>
+              <div class="card__meta-badge card__meta-badge--calendar">
+                <img src="./images/icon_calendar.svg" alt=""> 25 дней
+              </div>
+              <div class="card__meta-badge card__meta-badge--time">
+                <img src="./images/icon_time.svg" alt=""> 20-50 мин/день
+              </div>
             </div>
-            <a href="#" class="card__link">Сложность</a>
+            <a href="course.html?course=fitness" class="card__link">
+              <div class="card__meta-badge card__meta-badge--difficulty">
+                <img src="./images/progress.svg" alt=""> Сложность
+              </div>
+            </a>
           </div>
         </article>
 
         <!-- Step Aerobics -->
         <article class="card">
           <div class="card__image-wrapper">
-            <img src="step.jpg" alt="Степ-аэробика" class="card__image" />
-            <button class="card__play-btn">+</button>
+            <img src="./images/image_4.svg" alt="Степ-аэробика" class="card__image" />
+            <button class="card__play-btn">
+              <img src="./images/plus.svg" alt="Play" class="plus-icon" />
+            </button>
           </div>
           <div class="card__content">
             <h3 class="card__title">Степ-аэробика</h3>
             <div class="card__meta">
-              <span class="card__duration">25 дней</span>
-              <span class="card__duration">20-50 мин/день</span>
+              <div class="card__meta-badge card__meta-badge--calendar">
+                <img src="./images/icon_calendar.svg" alt=""> 25 дней
+              </div>
+              <div class="card__meta-badge card__meta-badge--time">
+                <img src="./images/icon_time.svg" alt=""> 20-50 мин/день
+              </div>
             </div>
-            <a href="#" class="card__link">Сложность</a>
+            <a href="course.html?course=step" class="card__link">
+              <div class="card__meta-badge card__meta-badge--difficulty">
+                <img src="./images/progress.svg" alt=""> Сложность
+              </div>
+            </a>
           </div>
         </article>
 
         <!-- Bodyflex -->
         <article class="card">
           <div class="card__image-wrapper">
-            <img src="bodyflex.jpg" alt="Бодифлекс" class="card__image" />
-            <button class="card__play-btn">+</button>
+            <img src="./images/image_5.svg" alt="Бодифлекс" class="card__image" />
+            <button class="card__play-btn">
+              <img src="./images/plus.svg" alt="Play" class="plus-icon" />
+            </button>
           </div>
           <div class="card__content">
             <h3 class="card__title">Бодифлекс</h3>
             <div class="card__meta">
-              <span class="card__duration">25 дней</span>
-              <span class="card__duration">20-50 мин/день</span>
+              <div class="card__meta-badge card__meta-badge--calendar">
+                <img src="./images/icon_calendar.svg" alt=""> 25 дней
+              </div>
+              <div class="card__meta-badge card__meta-badge--time">
+                <img src="./images/icon_time.svg" alt=""> 20-50 мин/день
+              </div>
             </div>
-            <a href="#" class="card__link">Сложность</a>
+            <a href="course.html?course=bodyflex" class="card__link">
+              <div class="card__meta-badge card__meta-badge--difficulty">
+                <img src="./images/progress.svg" alt=""> Сложность
+              </div>
+            </a>
           </div>
         </article>
-
-        <!-- Hug Placeholder (59 Hug x 18 Hug) -->
-        <div class="hug-placeholder">
-          <img src="hug.svg" alt="59 Hug x 18 Hug" />
-        </div>
 
       </div>
 
       <!-- CTA Button -->
       <div class="cta">
-        <button class="btn btn--cta">Наверх ↑</button>
+        <button class="btn btn--cta" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Наверх</button>
       </div>
 
     </div>
