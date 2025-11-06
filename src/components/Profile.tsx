@@ -1,26 +1,85 @@
 // src/components/Profile.tsx
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import Header from './Header';
 import '../styles/profile.css';
+import { deleteCourse } from '../api/fitness'; // Добавим для удаления
 
-const Profile = () => {
-  useEffect(() => {
-    const logoutBtn = document.getElementById('logout-btn-desktop');
-    const logoutMobile = document.getElementById('logout-mobile');
+export default function Profile() {
+  const { user, login, logout, loading } = useAuth(); // Убрали token
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleLogout = () => {
-      alert('Выход из аккаунта');
-      // Здесь будет реальный логаут
-    };
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await login(email, password);
+    } catch (error: any) {
+      alert('Ошибка входа: ' + (error.message || 'Неверные данные'));
+    }
+  };
 
-    logoutBtn?.addEventListener('click', handleLogout);
-    logoutMobile?.addEventListener('click', handleLogout);
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Предположим, что register — отдельная функция
+      // Если нет — используем login (регистрация через вход)
+      await login(email, password);
+    } catch (error: any) {
+      alert('Ошибка регистрации: ' + (error.message || 'Попробуйте снова'));
+    }
+  };
 
-    return () => {
-      logoutBtn?.removeEventListener('click', handleLogout);
-      logoutMobile?.removeEventListener('click', handleLogout);
-    };
-  }, []);
+  const handleDeleteCourse = async (courseId: string) => {
+    try {
+      await deleteCourse(courseId);
+      alert('Курс удалён');
+      // Обновить user.selectedCourses — можно через getProfile()
+    } catch (error: any) {
+      alert('Ошибка: ' + error.message);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Загрузка...</div>;
+  }
+
+  if (!user) {
+    return (
+      <>
+        <Header />
+        <main className="main">
+          <div className="container">
+            <h1 className="page-title">Вход / Регистрация</h1>
+            <form onSubmit={handleLogin} className="auth-form">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="auth-input"
+              />
+              <input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="auth-input"
+              />
+              <button type="submit" className="btn btn--cta">
+                Войти
+              </button>
+              <button type="button" onClick={handleRegister} className="btn btn--cta">
+                Регистрация
+              </button>
+            </form>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
@@ -34,12 +93,12 @@ const Profile = () => {
               <img src="/images/avatar.svg" alt="Аватар" className="avatar-img" />
             </div>
             <div className="profile-info">
-              <h1 className="profile-name">Сергей</h1>
-              <p className="profile-login">Логин: sergey.petrov96</p>
-              <button className="btn btn-logout" id="logout-btn-desktop">
+              <h1 className="profile-name">{user.email}</h1>
+              <p className="profile-login">Логин: {user.email}</p>
+              <button className="btn btn-logout" onClick={logout}>
                 Выйти
               </button>
-              <button className="btn btn--logout-mobile" id="logout-mobile">
+              <button className="btn btn--logout-mobile" onClick={logout}>
                 Выйти
               </button>
             </div>
@@ -48,14 +107,25 @@ const Profile = () => {
           <section className="my-courses">
             <h2 className="section-title">Мои курсы</h2>
             <div className="courses-grid" id="courses-container">
-              {/* Курсы будут добавлены через API */}
-              <div className="courses-empty">У вас пока нет добавленных курсов</div>
+              {user.selectedCourses && user.selectedCourses.length > 0 ? (
+                user.selectedCourses.map((courseId) => (
+                  <div key={courseId} className="course-card">
+                    <p>Курс ID: {courseId}</p>
+                    <button
+                      onClick={() => handleDeleteCourse(courseId)}
+                      className="btn btn--cta"
+                    >
+                      Удалить
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="courses-empty">У вас пока нет добавленных курсов</div>
+              )}
             </div>
           </section>
         </div>
       </main>
     </>
   );
-};
-
-export default Profile;
+}

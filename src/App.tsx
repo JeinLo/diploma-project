@@ -9,8 +9,8 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/course/:courseId" element={<Course />} />
+      <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path="/passing" element={<Passing />} />
     </Routes>
   );
 }

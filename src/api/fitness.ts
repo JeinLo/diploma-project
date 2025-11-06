@@ -90,3 +90,18 @@ export async function resetWorkout(courseId: string, workoutId: string) {
 export async function getProfile() {
   return apiRequest('/users/me');
 }
+
+export async function getWorkoutById(courseId: string, workoutId: string) {
+  return apiRequest(`/courses/${courseId}/workouts/${workoutId}`);
+}
+
+export async function getUserProgress(courseId: string) {
+  return apiRequest(`/users/me/progress?courseId=${courseId}`);
+}
+
+export async function saveProgress(courseId: string, workoutId: string, exercises: number[]) {
+  return apiRequest(`/courses/${courseId}/workouts/${workoutId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ progressData: exercises }),
+  });
+}
