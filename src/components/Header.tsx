@@ -1,22 +1,27 @@
-// src/components/Header.tsx
+import { useState } from 'react';
+import AuthModal from './AuthModal';
+
 export default function Header() {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
   return (
-    <header className="header">
-      <div className="container header__container">
-        <a href="/" className="logo">
-          <img src="/images/Logo.svg" alt="SkyFitnessPro Logo" className="logo__img" />
-          <span className="logo__text">SkyFitnessPro</span>
-        </a>
-        <div className="user-menu">
-          <div className="user-avatar">
-            <img src="/images/avatar.svg" alt="Аватар" className="user-avatar-img" />
+    <>
+      <header className="header">
+        <div className="container header__container">
+          <div className="logo-wrapper">
+            <a href="/" className="logo">
+              <img src="/images/Logo.svg" alt="SkyFitnessPro Logo" className="logo__img" />
+              <span className="logo__text">SkyFitnessPro</span>
+            </a>
+            <p className="header__tagline">Онлайн-тренировки для занятий дома</p>
           </div>
-          <span className="user-name">Сергей</span>
-          <span className="user-arrow-wrapper">
-            <img src="/images/strelka.svg" alt="Стрелка" className="user-arrow" />
-          </span>
+          <button className="btn btn--login" onClick={() => setIsAuthOpen(true)}>
+            Войти
+          </button>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+    </>
   );
 }

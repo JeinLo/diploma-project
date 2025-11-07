@@ -1,48 +1,28 @@
-// src/components/Profile.tsx
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Header from './Header';
 import '../styles/profile.css';
-import { deleteCourse } from '../api/fitness'; // Добавим для удаления
+import { deleteCourse } from '../api/fitness';
 
 export default function Profile() {
-  const { user, login, logout, loading } = useAuth(); // Убрали token
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { user, logout, token } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await login(email, password);
-    } catch (error: any) {
-      alert('Ошибка входа: ' + (error.message || 'Неверные данные'));
+  useEffect(() => {
+    if (!token) {
+      window.location.href = '/';
     }
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      // Предположим, что register — отдельная функция
-      // Если нет — используем login (регистрация через вход)
-      await login(email, password);
-    } catch (error: any) {
-      alert('Ошибка регистрации: ' + (error.message || 'Попробуйте снова'));
-    }
-  };
+  }, [token]);
 
   const handleDeleteCourse = async (courseId: string) => {
+    if (!confirm('Удалить курс?')) return;
     try {
       await deleteCourse(courseId);
       alert('Курс удалён');
-      // Обновить user.selectedCourses — можно через getProfile()
-    } catch (error: any) {
-      alert('Ошибка: ' + error.message);
+      window.location.reload();
+    } catch (err: any) {
+      alert('Ошибка: ' + err.message);
     }
   };
-
-  if (loading) {
-    return <div className="loading">Загрузка...</div>;
-  }
 
   if (!user) {
     return (
@@ -50,31 +30,7 @@ export default function Profile() {
         <Header />
         <main className="main">
           <div className="container">
-            <h1 className="page-title">Вход / Регистрация</h1>
-            <form onSubmit={handleLogin} className="auth-form">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="auth-input"
-              />
-              <input
-                type="password"
-                placeholder="Пароль"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="auth-input"
-              />
-              <button type="submit" className="btn btn--cta">
-                Войти
-              </button>
-              <button type="button" onClick={handleRegister} className="btn btn--cta">
-                Регистрация
-              </button>
-            </form>
+            <div className="loading">Загрузка профиля...</div>
           </div>
         </main>
       </>
@@ -93,12 +49,9 @@ export default function Profile() {
               <img src="/images/avatar.svg" alt="Аватар" className="avatar-img" />
             </div>
             <div className="profile-info">
-              <h1 className="profile-name">{user.email}</h1>
+              <h2 className="profile-name">{user.email}</h2>
               <p className="profile-login">Логин: {user.email}</p>
               <button className="btn btn-logout" onClick={logout}>
-                Выйти
-              </button>
-              <button className="btn btn--logout-mobile" onClick={logout}>
                 Выйти
               </button>
             </div>
@@ -106,21 +59,21 @@ export default function Profile() {
 
           <section className="my-courses">
             <h2 className="section-title">Мои курсы</h2>
-            <div className="courses-grid" id="courses-container">
+            <div className="courses-grid">
               {user.selectedCourses && user.selectedCourses.length > 0 ? (
-                user.selectedCourses.map((courseId) => (
+                user.selectedCourses.map((courseId: string) => (
                   <div key={courseId} className="course-card">
                     <p>Курс ID: {courseId}</p>
                     <button
                       onClick={() => handleDeleteCourse(courseId)}
-                      className="btn btn--cta"
+                      className="btn btn--danger"
                     >
                       Удалить
                     </button>
                   </div>
                 ))
               ) : (
-                <div className="courses-empty">У вас пока нет добавленных курсов</div>
+                <p className="courses-empty">У вас пока нет курсов</p>
               )}
             </div>
           </section>

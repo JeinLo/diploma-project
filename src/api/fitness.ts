@@ -1,8 +1,6 @@
-// src/api/fitness.ts
-const BASE_URL = '/api/fitness';  // Твои эндпоинты из документации
+const BASE_URL = 'https://wedev-api.sky.pro/api/fitness';
 
-// Вспомогательная функция для запросов с токеном
-async function apiRequest(endpoint: string, options: RequestInit = {}) {
+export async function apiRequest(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem('token');
   const config = {
     headers: {
@@ -13,35 +11,15 @@ async function apiRequest(endpoint: string, options: RequestInit = {}) {
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
+
   if (!response.ok) {
-    throw new Error(await response.json().then((data) => data.message || response.statusText));
+    const error = await response.json().catch(() => ({ message: 'Сервер недоступен' }));
+    throw new Error(error.message || response.statusText);
   }
+
   return response.json();
 }
 
-// === АВТОРИЗАЦИЯ ===
-export async function login(email: string, password: string) {
-  const data = await apiRequest('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  });
-  localStorage.setItem('token', data.token);
-  return data;
-}
-
-export async function register(email: string, password: string) {
-  const data = await apiRequest('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  });
-  return data;
-}
-
-export async function logout() {
-  localStorage.removeItem('token');
-}
-
-// === КУРСЫ ===
 export async function getAllCourses() {
   return apiRequest('/courses');
 }
@@ -61,47 +39,17 @@ export async function deleteCourse(courseId: string) {
   return apiRequest(`/users/me/courses/${courseId}`, { method: 'DELETE' });
 }
 
-export async function resetCourse(courseId: string) {
-  return apiRequest(`/courses/${courseId}/reset`, { method: 'PATCH' });
+export async function getUserProgress(courseId: string) {
+  return apiRequest(`/users/me/progress?courseId=${courseId}`);
 }
 
-export async function getCourseWorkouts(courseId: string) {
-  return apiRequest(`/courses/${courseId}/workouts`);
-}
-
-// === ПРОГРЕСС ===
-export async function getProgress(courseId: string, workoutId?: string) {
-  const params = workoutId ? `?courseId=${courseId}&workoutId=${workoutId}` : `?courseId=${courseId}`;
-  return apiRequest(`/users/me/progress${params}`);
-}
-
-export async function updateProgress(courseId: string, workoutId: string, progressData: number[]) {
+export async function saveProgress(courseId: string, workoutId: string, progressData: number[]) {
   return apiRequest(`/courses/${courseId}/workouts/${workoutId}`, {
     method: 'PATCH',
     body: JSON.stringify({ progressData }),
   });
 }
 
-export async function resetWorkout(courseId: string, workoutId: string) {
-  return apiRequest(`/courses/${courseId}/workouts/${workoutId}/reset`, { method: 'PATCH' });
-}
-
-// === ПРОФИЛЬ ===
-export async function getProfile() {
-  return apiRequest('/users/me');
-}
-
 export async function getWorkoutById(courseId: string, workoutId: string) {
   return apiRequest(`/courses/${courseId}/workouts/${workoutId}`);
-}
-
-export async function getUserProgress(courseId: string) {
-  return apiRequest(`/users/me/progress?courseId=${courseId}`);
-}
-
-export async function saveProgress(courseId: string, workoutId: string, exercises: number[]) {
-  return apiRequest(`/courses/${courseId}/workouts/${workoutId}`, {
-    method: 'PATCH',
-    body: JSON.stringify({ progressData: exercises }),
-  });
 }

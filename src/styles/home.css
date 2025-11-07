@@ -378,3 +378,21 @@ a {
     height: auto;
   }
 }
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error-banner {
+  background: #ffefef;
+  color: #d8000c;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #ffd2d2;
+}

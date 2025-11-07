@@ -1,11 +1,15 @@
 // src/components/Course.tsx
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import '../styles/course.css';
+import { useAuth } from '../context/AuthContext';
+import { addCourse } from '../api/fitness';
 
 const Course = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
+  const { user, token } = useAuth();
 
   useEffect(() => {
     const courses: Record<string, any> = {
@@ -105,6 +109,32 @@ const Course = () => {
     }
   }, [courseId]);
 
+  const handleStartWorkout = () => {
+    if (!token) {
+      alert('Войдите, чтобы добавить курс');
+      navigate('/profile');
+      return;
+    }
+    navigate(`/course/${courseId}/workout/1`);
+  };
+
+  const handleAddCourse = async () => {
+    if (!token) {
+      alert('Войдите в аккаунт');
+      navigate('/profile');
+      return;
+    }
+
+    try {
+      await addCourse(courseId!);
+      alert('Курс успешно добавлен в ваш профиль!');
+    } catch (err: any) {
+      alert('Ошибка: ' + err.message);
+    }
+  };
+
+  const isCourseAdded = user?.selectedCourses?.includes(courseId!);
+
   return (
     <>
       <Header />
@@ -154,7 +184,24 @@ const Course = () => {
                   <li>упражнения заряжают бодростью</li>
                   <li>помогают противостоять стрессам</li>
                 </ul>
-                <button className="btn btn--cta">Войдите, чтобы добавить курс</button>
+
+                {/* Кнопка "Начать тренировку" */}
+                <button onClick={handleStartWorkout} className="btn btn--cta">
+                  Начать тренировку
+                </button>
+
+                {/* Кнопка "Добавить курс" — если ещё не добавлен */}
+                {!isCourseAdded && (
+                  <button onClick={handleAddCourse} className="btn btn--cta" style={{ marginTop: '16px', background: '#4ECDC4' }}>
+                    Добавить курс в профиль
+                  </button>
+                )}
+
+                {isCourseAdded && (
+                  <p style={{ color: '#BCEC30', fontWeight: 'bold', marginTop: '16px' }}>
+                    Курс уже в вашем профиле
+                  </p>
+                )}
               </div>
               <img src="/images/img_0.svg" alt="Бегун" className="cta-card__image" />
             </div>
