@@ -1,53 +1,24 @@
-// src/components/Home.tsx
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAllCourses } from '../api/fitness';
 import '../styles/home.css';
-import AuthModal from './AuthModal'; // ← Добавили импорт
+import AuthModal from './AuthModal';
 
 export default function Home() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAuthOpen, setIsAuthOpen] = useState(false); // ← Теперь используется!
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  // Заглушка (всегда работает)
+  const navigate = useNavigate();
+
+  // Заглушка
   const mockCourses = [
-    {
-      _id: 'yoga',
-      nameRU: 'Йога',
-      image: '/images/image_1.svg',
-      durationInDays: 25,
-      dailyDurationInMinutes: { from: 20, to: 50 },
-    },
-    {
-      _id: 'stretching',
-      nameRU: 'Стретчинг',
-      image: '/images/image_2.svg',
-      durationInDays: 25,
-      dailyDurationInMinutes: { from: 20, to: 50 },
-    },
-    {
-      _id: 'fitness',
-      nameRU: 'Фитнес',
-      image: '/images/image_3.svg',
-      durationInDays: 25,
-      dailyDurationInMinutes: { from: 20, to: 50 },
-    },
-    {
-      _id: 'step',
-      nameRU: 'Степ-аэробика',
-      image: '/images/image_4.svg',
-      durationInDays: 25,
-      dailyDurationInMinutes: { from: 20, to: 50 },
-    },
-    {
-      _id: 'bodyflex',
-      nameRU: 'Бодифлекс',
-      image: '/images/image_5.svg',
-      durationInDays: 25,
-      dailyDurationInMinutes: { from: 20, to: 50 },
-    },
+    { _id: 'yoga', nameRU: 'Йога', image: '/images/image_1.svg', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 } },
+    { _id: 'stretching', nameRU: 'Стретчинг', image: '/images/image_2.svg', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 } },
+    { _id: 'fitness', nameRU: 'Фитнес', image: '/images/image_3.svg', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 } },
+    { _id: 'step', nameRU: 'Степ-аэробика', image: '/images/image_4.svg', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 } },
+    { _id: 'bodyflex', nameRU: 'Бодифлекс', image: '/images/image_5.svg', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 } },
   ];
 
   useEffect(() => {
@@ -71,6 +42,13 @@ export default function Home() {
     loadCourses();
   }, []);
 
+  // Клик по кнопке "+" — всегда переход
+  const handlePlusClick = (e: React.MouseEvent, courseId: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    navigate(`/course/${courseId}`);
+  };
+
   if (loading) {
     return <div className="loading">Загрузка курсов...</div>;
   }
@@ -87,11 +65,7 @@ export default function Home() {
             </a>
             <p className="header__tagline">Онлайн-тренировки для занятий дома</p>
           </div>
-          {/* ← Заменили Link на button + открытие модалки */}
-          <button
-            className="btn btn--login"
-            onClick={() => setIsAuthOpen(true)}
-          >
+          <button className="btn btn--login" onClick={() => setIsAuthOpen(true)}>
             Войти
           </button>
         </div>
@@ -100,7 +74,6 @@ export default function Home() {
       {/* MAIN */}
       <main className="main">
         <div className="container main__container">
-          {/* Hero */}
           <div className="hero">
             <h1 className="hero__title">
               Начните заниматься спортом и улучшите качество жизни
@@ -121,8 +94,12 @@ export default function Home() {
               <article key={course._id} className="card">
                 <div className="card__image-wrapper">
                   <img src={course.image || '/images/default.jpg'} alt={course.nameRU} className="card__image" />
-                  <button className="card__play-btn">
-                    <img src="/images/plus.svg" alt="Добавить" className="plus-icon" />
+                  {/* КНОПКА "+" — ТОЛЬКО ПЕРЕХОД */}
+                  <button
+                    className="card__play-btn"
+                    onClick={(e) => handlePlusClick(e, course._id)}
+                  >
+                    <img src="/images/plus.svg" alt="Подробнее" className="plus-icon" />
                   </button>
                 </div>
                 <div className="card__content">
@@ -150,13 +127,12 @@ export default function Home() {
               className="btn btn--cta"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              Наверх ↑
+              Наверх
             </button>
           </div>
         </div>
       </main>
 
-      {/* ← МОДАЛКА АВТОРИЗАЦИИ */}
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
