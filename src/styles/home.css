@@ -324,8 +324,9 @@ a {
 
 /* === CTA === */
 .cta {
-  text-align: center;
-  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
 }
 
 .btn--cta {
@@ -346,6 +347,26 @@ a {
   background: #a8d62a;
   transform: translateY(-2px);
 }
+.btn--cta-scroll {
+  width: 127px;
+  height: 52px;
+  background: #BCEC30;
+  color: #000;
+  border: none;
+  border-radius: 46px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 6px 16px rgba(188, 236, 48, 0.3);
+}
+
+.btn--cta-scroll:hover {
+  background: #a8d62a;
+  transform: translateY(-2px);
+}
+
 
 /* === RESPONSIVE === */
 @media (max-width: 1300px) {

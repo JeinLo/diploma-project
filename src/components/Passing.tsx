@@ -9,7 +9,6 @@ import { useAuth } from '../context/AuthContext';
 export default function Passing() {
   const { courseId, workoutId } = useParams<{ courseId: string; workoutId: string }>();
   const { user } = useAuth();
-
   const [videoUrl, setVideoUrl] = useState('/videos/yoga-lesson-2.mp4');
   const [workoutName, setWorkoutName] = useState('Тренировка');
   const [exercises, setExercises] = useState<string[][]>([['', '', ''], ['', '', ''], ['', '', '']]);
@@ -23,7 +22,6 @@ export default function Passing() {
     const handlePlay = () => {
       overlay.style.display = 'none';
     };
-
     const handleClickOverlay = () => {
       video?.play();
     };
@@ -31,12 +29,10 @@ export default function Passing() {
     video?.addEventListener('play', handlePlay);
     overlay?.addEventListener('click', handleClickOverlay);
 
-    // Загрузка данных с API
-    const loadWorkout = async () => {
+      const loadWorkout = async () => {
       if (!courseId || !workoutId) return;
-
       try {
-        const workout = await getWorkoutById(courseId, workoutId);
+        const workout: any = await getWorkoutById(courseId, workoutId);
         setVideoUrl(workout.video || '/videos/yoga-lesson-2.mp4');
         setWorkoutName(workout.name || 'Тренировка');
 
@@ -45,21 +41,20 @@ export default function Passing() {
           'Наклоны вперед', 'Наклоны назад', 'Поднятие ног',
           'Наклоны вперед', 'Наклоны назад', 'Поднятие ног'
         ];
-
         const cols: string[][] = [[], [], []];
         ex.forEach((name: string, i: number) => {
           cols[i % 3].push(name);
         });
         setExercises(cols);
 
-        // Загрузка прогресса
-        const userProgress = await getUserProgress(courseId);
+       const userProgress: any[] = await getUserProgress(courseId);
         const saved = userProgress.find((p: any) => p.workoutId === workoutId);
         if (saved?.progressData) {
           setProgress(saved.progressData);
         }
       } catch (err) {
-        console.error('Ошибка загрузки тренировки:', err);
+        console.warn('Не удалось загрузить тренировку, оставляем заглушку');
+        // Заглушки уже в useState — не меняем
       }
     };
 
@@ -84,13 +79,11 @@ export default function Passing() {
       alert('Войдите в аккаунт');
       return;
     }
-
     const allDone = progress.every(p => p === 100);
     if (!allDone) {
       alert('Доведите все упражнения до 100%');
       return;
     }
-
     try {
       await saveProgress(courseId!, workoutId!, progress);
       setShowModal(true);
@@ -111,7 +104,6 @@ export default function Passing() {
       <main className="main">
         <div className="container">
           <h1 className="lesson-title">{workoutName}</h1>
-
           <section className="video-section">
             <div className="video-wrapper">
               <video controls className="video-player" key={videoUrl}>
@@ -158,7 +150,6 @@ export default function Passing() {
                 </div>
               ))}
             </div>
-
             <button className="btn btn--cta" onClick={handleComplete}>
               Завершить тренировку
             </button>
@@ -166,7 +157,6 @@ export default function Passing() {
         </div>
       </main>
 
-      {/* Модальное окно */}
       {showModal && (
         <div className="congrats-modal">
           <div className="congrats-content">

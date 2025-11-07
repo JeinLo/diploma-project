@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/auth/login';
@@ -16,12 +17,13 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthContextType['user']>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      // Заглушка — в реальности /users/me
-      setUser({ email: localStorage.getItem('userEmail') || 'user@example.com', selectedCourses: [] });
+      const email = localStorage.getItem('userEmail') || '';
+      setUser({ email, selectedCourses: [] });
     }
   }, [token]);
 
@@ -57,7 +59,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login: handleLogin, register: handleRegister, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      token,
+      login: handleLogin,
+      register: handleRegister,
+      logout // Исправлено: было hof
+    }}>
       {children}
     </AuthContext.Provider>
   );

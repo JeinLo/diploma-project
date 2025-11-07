@@ -1,39 +1,76 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom'; 
+// src/components/Course.tsx
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from './Header';
 import '../styles/course.css';
 import { useAuth } from '../context/AuthContext';
 import { addCourse } from '../api/fitness';
 import AuthModal from './AuthModal';
-import { useState } from 'react';
+
+const bgColors: Record<string, string> = {
+  yoga: '#FFC700',
+  stretching: '#2491D2',
+  fitness: '#F7A012',
+  step: '#FF7E65',
+  bodyflex: '#7D458C',
+};
+
+const fallbackImages: Record<string, string> = {
+  yoga: '/images/image_1.svg',
+  stretching: '/images/image_2.svg',
+  fitness: '/images/image_3.svg',
+  step: '/images/image_4.svg',
+  bodyflex: '/images/image_5.svg',
+};
+
+const fallbackCourses: Record<string, any> = {
+  yoga: { title: 'Йога', directions: ['Йога для новичков', 'Классическая йога', 'Кундалини-йога', 'Йогатерапия', 'Хатха-йога', 'Аштанга-йога'] },
+  stretching: { title: 'Стретчинг', directions: ['Растяжка для новичков', 'Гибкость спины', 'Растяжка ног', 'Растяжка плеч', 'Утренняя растяжка', 'Вечерняя растяжка'] },
+  fitness: { title: 'Фитнес', directions: ['Силовые тренировки', 'Кардио', 'Функциональный тренинг', 'HIIT', 'Тренировка на выносливость', 'Тренировка на силу'] },
+  step: { title: 'Степ-аэробика', directions: ['Базовый степ', 'Степ + силовые', 'Степ-кардио', 'Степ для новичков', 'Степ с гантелями', 'Степ-танцы'] },
+  bodyflex: { title: 'Бодифлекс', directions: ['Дыхательная гимнастика', 'Укрепление пресса', 'Укрепление ягодиц', 'Бодифлекс для лица', 'Бодифлекс для рук', 'Бодифлекс для ног'] },
+};
 
 const Course = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const { user, token } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [courseData, setCourseData] = useState<any>(null);
 
+  // Загрузка данных с API + запасная заглушка
   useEffect(() => {
-    const courses: Record<string, any> = {
-      yoga: { title: 'Йога', image: '/images/image_1.svg', bgColor: '#FFC700', directions: ['Йога для новичков', 'Классическая йога', 'Кундалини-йога', 'Йогатерапия', 'Хатха-йога', 'Аштанга-йога'] },
-      stretching: { title: 'Стретчинг', image: '/images/image_2.svg', bgColor: '#FF6B6B', directions: ['Растяжка для новичков', 'Гибкость спины', 'Растяжка ног', 'Растяжка плеч', 'Утренняя растяжка', 'Вечерняя растяжка'] },
-      fitness: { title: 'Фитнес', image: '/images/image_3.svg', bgColor: '#4ECDC4', directions: ['Силовые тренировки', 'Кардио', 'Функциональный тренинг', 'HIIT', 'Тренировка на выносливость', 'Тренировка на силу'] },
-      step: { title: 'Степ-аэробика', image: '/images/image_4.svg', bgColor: '#45B7D1', directions: ['Базовый степ', 'Степ + силовые', 'Степ-кардио', 'Степ для новичков', 'Степ с гантелями', 'Степ-танцы'] },
-      bodyflex: { title: 'Бодифлекс', image: '/images/image_5.svg', bgColor: '#96CEB4', directions: ['Дыхательная гимнастика', 'Укрепление пресса', 'Укрепление ягодиц', 'Бодифлекс для лица', 'Бодифлекс для рук', 'Бодифлекс для ног'] },
+    const fetchCourse = async () => {
+      if (!courseId) return;
+      try {
+        const response = await fetch(`https://wedev-api.sky.pro/api/fitness/courses/${courseId}`);
+        if (!response.ok) throw new Error('Курс не найден');
+        const data = await response.json();
+        setCourseData(data);
+      } catch (err) {
+        console.warn('API курса недоступен, используем заглушку');
+        setCourseData(fallbackCourses[courseId] || fallbackCourses.yoga);
+      }
     };
+    fetchCourse();
+  }, [courseId]);
 
-    const course = courses[courseId || 'yoga'] || courses.yoga;
+  const course = courseData || fallbackCourses[courseId || 'yoga'] || fallbackCourses.yoga;
+  const bgColor = bgColors[courseId || 'yoga'];
+  const imageSrc = courseData?.image || fallbackImages[courseId || 'yoga'];
 
+  // Обновление DOM-элементов
+  useEffect(() => {
     const heroTitleEl = document.getElementById('hero-title');
-    if (heroTitleEl) heroTitleEl.textContent = course.title;
+    if (heroTitleEl) heroTitleEl.textContent = course.title || course.nameRU || 'Курс';
 
     const heroImageEl = document.getElementById('hero-image') as HTMLImageElement;
-    if (heroImageEl) heroImageEl.src = course.image;
+    if (heroImageEl) heroImageEl.src = imageSrc;
 
     const heroBgEl = document.getElementById('hero-bg');
-    if (heroBgEl) heroBgEl.style.backgroundColor = course.bgColor;
+    if (heroBgEl) heroBgEl.style.backgroundColor = bgColor;
 
     const directionsListEl = document.getElementById('directions-list');
-    if (directionsListEl) {
+    if (directionsListEl && course.directions) {
       directionsListEl.innerHTML = course.directions
         .map((dir: string) => `
           <div class="direction-item">
@@ -43,17 +80,14 @@ const Course = () => {
         `)
         .join('');
     }
-  }, [courseId]);
+  }, [courseId, course, imageSrc, bgColor]);
 
   const handleCtaClick = () => {
     if (!token) {
       setShowAuthModal(true);
       return;
     }
-
-    if (user?.selectedCourses?.includes(courseId!)) {
-      return;
-    }
+    if (user?.selectedCourses?.includes(courseId!)) return;
 
     addCourse(courseId!).then(() => {
       alert('Курс добавлен в профиль!');
@@ -66,6 +100,10 @@ const Course = () => {
   const isCourseAdded = user?.selectedCourses?.includes(courseId!);
   const isAuthenticated = !!token;
 
+  if (!course) {
+    return <div className="loading">Загрузка...</div>;
+  }
+
   return (
     <>
       <Header />
@@ -73,8 +111,8 @@ const Course = () => {
         <div className="container">
           <section className="course-hero">
             <div className="course-hero__bg" id="hero-bg">
-              <h1 className="course-hero__title" id="hero-title">Йога</h1>
-              <img id="hero-image" src="/images/image_1.svg" alt="" className="course-hero__image" />
+              <h1 className="course-hero__title" id-lg="hero-title">Йога</h1>
+              <img id="hero Ly-image" src={imageSrc} alt="" className="course-hero__image" />
             </div>
             <div className="course-hero__content">
               <div className="course-hero__benefits">
@@ -114,7 +152,6 @@ const Course = () => {
                   <li>упражнения заряжают бодростью</li>
                   <li>помогают противостоять стрессам</li>
                 </ul>
-
                 <button
                   onClick={handleCtaClick}
                   className={`btn--cta ${
