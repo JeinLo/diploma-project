@@ -4,7 +4,7 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem('token');
   const config = {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': '',
       ...(token && { Authorization: `Bearer ${token}` }),
     },
     ...options,
