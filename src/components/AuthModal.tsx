@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// src/components/AuthModal.tsx
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import '../styles/auth-modal.css';
 
@@ -20,35 +21,40 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   }>({});
 
   const { login, register } = useAuth();
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   const validate = () => {
     const newErrors: any = {};
+    if (!email) newErrors.email = 'Заполните поле';
+    else if (!isLogin && !/^\S+@\S+\.\S+$/.test(email))
+      newErrors.email = 'Введите коррек ный Email';
 
-    if (!email) {
-      newErrors.email = 'Заполните поле';
-    } else if (!isLogin && !/^\S+@\S+\.\S+$/.test(email)) {
-      newErrors.email = 'Введите корректный Email';
-    }
-
-    if (!password) {
-      newErrors.password = 'Заполните поле';
-    } else if (password.length < 6) {
+    if (!password) newErrors.password = 'Заполните поле';
+    else if (password.length < 6)
       newErrors.password = 'Пароль должен содержать не менее 6 символов';
-    } else if (!isLogin) {
+    else if (!isLogin) {
       const hasUppercase = /[A-Z]/.test(password);
       const specialCount = (password.match(/[^A-Za-z0-9]/g) || []).length;
-      if (!hasUppercase) {
+      if (!hasUppercase)
         newErrors.password = 'Пароль должен содержать как минимум одну заглавную букву';
-      } else if (specialCount < 2) {
+      else if (specialCount < 2)
         newErrors.password = 'Пароль должен содержать не менее 2 спецсимволов';
-      }
     }
 
-    if (!isLogin && password !== confirmPassword) {
+    if (!isLogin && password !== confirmPassword)
       newErrors.confirm = 'Пароли не совпадают';
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,9 +70,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       } else {
         await register(email, password);
       }
-      onClose();
+      onClose(); // Просто закрываем — НЕ ПРЫГАЕМ НИКУДА
     } catch (err: any) {
-      setErrors({ general: err.message || 'Ошибка сервера' });
+      setErrors({ general: err.message || 'Ошибка сервера. Попробуйте позже.' });
     }
   };
 
@@ -79,11 +85,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   };
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <form onSubmit={handleSubmit} className="auth-form">
+    <div className="auth-modal-overlay">
+      <div className="auth-modal" ref={modalRef}>
+        <form onSubmit={handleSubmit} className="auth-form" onClick={(e) => e.stopPropagation()}>
           <div className="auth-modal__logo-center">
-            <a href="/" className="logo">
+            <a href="/" className="logo" onClick={(e) => e.preventDefault()}>
               <img src="/images/Logo.svg" alt="SkyFitnessPro Logo" className="logo__img" />
               <span className="logo__text">SkyFitnessPro</span>
             </a>
@@ -111,6 +117,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             {errors.password && <div className="auth-error">{errors.password}</div>}
           </div>
 
+          {errors.general && (
+            <div className="auth-form__group">
+              <div className="auth-error general-error">{errors.general}</div>
+            </div>
+          )}
+
           {!isLogin && (
             <div className="auth-form__group">
               <input
@@ -124,16 +136,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </div>
           )}
 
-          {errors.general && (
-            <div className="auth-error general-error">{errors.general}</div>
-          )}
-
           <button type="submit" className="btn btn--auth-submit">
             {isLogin ? 'Войти' : 'Зарегистрироваться'}
           </button>
 
           <button type="button" className="btn btn--auth-secondary" onClick={switchMode}>
-            {isLogin ? 'Зарегистрироваться' : 'Войти'}
+            {isLogin ? 'Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
           </button>
         </form>
       </div>

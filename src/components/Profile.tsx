@@ -1,93 +1,166 @@
 // src/components/Profile.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import Header from './Header';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/profile.css';
-import { deleteCourse } from '../api/fitness';
+import { deleteCourse, getAllCourses } from '../api/fitness';
+
+const bgColors: Record<string, string> = {
+  yoga: '#FFC700',
+  stretching: '#2491D2',
+  fitness: '#F7A012',
+  step: '#FF7E65',
+  bodyflex: '#7D458C',
+};
 
 export default function Profile() {
-  const { user: authUser, logout, token } = useAuth();
-  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const { user, logout, token } = useAuth();
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // ---------- Загрузка выбранных курсов ----------
   useEffect(() => {
     if (!token) {
-      window.location.href = '/';
+      navigate('/');
       return;
     }
-    const fetchSelected = async () => {
+
+    const loadCourses = async () => {
       try {
-        const res = await fetch('https://wedev-api.sky.pro/api/fitness/users/me/courses', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setSelectedCourses(data.courses || []);
-        }
+        const allCourses = await getAllCourses();
+        const userCourseIds = user?.selectedCourses || [];
+        const userCourses = allCourses.filter((c: any) => userCourseIds.includes(c._id));
+        setCourses(userCourses);
       } catch (err) {
-        console.warn('Не удалось загрузить выбранные курсы');
+        console.error('Ошибка загрузки курсов:', err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchSelected();
-  }, [token]);
 
-  // ---------- Удаление ----------
+    loadCourses();
+  }, [token, user, navigate]);
+
   const handleDeleteCourse = async (courseId: string) => {
-    if (!confirm('Удалить курс?')) return;
+    if (!confirm('Удалить курс из профиля?')) return;
     try {
       await deleteCourse(courseId);
-      setSelectedCourses(prev => prev.filter(id => id !== courseId));
-      alert('Курс удалён');
+      setCourses(prev => prev.filter(c => c._id !== courseId));
+      alert('Курс удалён из профиля');
     } catch (err: any) {
       alert('Ошибка: ' + err.message);
     }
   };
 
-  if (!authUser) {
+  const getProgress = (courseId: string) => {
+    const progressMap: Record<string, number> = {
+      yoga: 40,
+      stretching: 0,
+      fitness: 100,
+    };
+    return progressMap[courseId] || 0;
+  };
+
+  const getButtonText = (progress: number) => {
+    if (progress === 0) return 'Начать тренировки';
+    if (progress === 100) return 'Начать заново';
+    return 'Продолжить';
+  };
+
+  if (!user) {
     return (
-      <>
-        <Header />
-        <main className="main"><div className="container"><div className="loading">Загрузка профиля...</div></div></main>
-      </>
+      <main className="main">
+        <div className="container">
+          <div className="loading">Загрузка профиля...</div>
+        </div>
+      </main>
     );
   }
 
   return (
-    <>
-      <Header />
-      <main className="main">
-        <div className="container">
-          <h1 className="page-title">Профиль</h1>
-          <section className="profile-card">
-            <div className="profile-avatar">
-              <img src="/images/avatar.svg" alt="Аватар" className="avatar-img" />
-            </div>
-            <div className="profile-info">
-              <h2 className="profile-name">{authUser.email}</h2>
-              <p className="profile-login">Логин: {authUser.email}</p>
-              <button className="btn btn-logout" onClick={logout}>Выйти</button>
-            </div>
-          </section>
+    <main className="main">
+      <div className="container">
+        <h1 className="page-title">Профиль</h1>
 
-          <section className="my-courses">
-            <h2 className="section-title">Мои курсы</h2>
+        <section className="profile-card">
+          <div className="profile-avatar">
+            <img src="/images/avatar.svg" alt="Аватар" className="avatar-img" />
+          </div>
+          <div className="profile-info">
+            <h2 className="profile-name">{user.email}</h2>
+            <p className="profile-login">Логин: {user.email}</p>
+            <button id="logout-btn-desktop" className="btn-logout" onClick={logout}>
+              Выйти
+            </button>
+          </div>
+        </section>
+
+        <section className="my-courses">
+          <h2 className="section-title">Мои курсы</h2>
+          {loading ? (
+            <div className="loading">Загрузка курсов...</div>
+          ) : courses.length === 0 ? (
+            <p className="courses-empty">У вас пока нет курсов. Перейдите на <Link to="/">главную</Link> и выберите курс!</p>
+          ) : (
             <div className="courses-grid">
-              {selectedCourses.length > 0 ? (
-                selectedCourses.map((courseId: string) => (
-                  <div key={courseId} className="course-card">
-                    <p>Курс ID: {courseId}</p>
-                    <button onClick={() => handleDeleteCourse(courseId)} className="btn btn--danger">
-                      Удалить
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <p className="courses-empty">У вас пока нет курсов</p>
-              )}
+              {courses.map((course) => {
+                const progress = getProgress(course._id);
+                return (
+                  <article key={course._id} className="course-card">
+                    <div
+                      className="course-image-wrapper"
+                      style={{ backgroundColor: bgColors[course._id] || '#BCEC30' }}
+                    >
+                      <img
+                        src={course.image || `/images/image_${course._id}.svg`}
+                        alt={course.nameRU}
+                        className="card__image"
+                      />
+                      <button
+                        className="card__play-btn course-delete"
+                        onClick={() => handleDeleteCourse(course._id)}
+                      >
+                        <img src="/images/minus.svg" alt="Удалить" />
+                      </button>
+                    </div>
+                    <div className="course-content">
+                      <h3 className="course-title">{course.nameRU}</h3>
+                      <div className="course-meta">
+                        <div className="course-meta-item">
+                          <img src="/images/icon_calendar.svg" alt="" />
+                          {course.durationInDays} дней
+                        </div>
+                        <div className="course-meta-item">
+                          <img src="/images/icon_time.svg" alt="" />
+                          {course.dailyDurationInMinutes.from}-{course.dailyDurationInMinutes.to} мин/день
+                        </div>
+                      </div>
+                      <Link to="#" className="course-link">
+                        <img src="/images/progress.svg" alt="" /> Сложность
+                      </Link>
+                      <div className="course-progress">
+                        <div className="progress-text">Прогресс {progress}%</div>
+                        <div className="progress-bar">
+                          <div
+                            className="progress-fill"
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                      <Link
+                        to={`/course/${course._id}/workout/1`}
+                        className="course-btn"
+                      >
+                        {getButtonText(progress)}
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
-          </section>
-        </div>
-      </main>
-    </>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }

@@ -1,93 +1,86 @@
 // src/api/fitness.ts
-const API_URL = 'https://wedev-api.sky.pro/api/fitness';
 
-export async function getAllCourses() {
-  const res = await fetch(`${API_URL}/courses`);
-  if (!res.ok) throw new Error('Не удалось загрузить курсы');
-  return res.json();
+const BASE_URL = 'https://wedev-api.sky.pro/api/fitness';
+
+// === ТИПЫ ===
+export interface Course {
+  _id: string;
+  nameRU: string;
+  nameEN: string;
+  image?: string;
+  durationInDays: number;
+  dailyDurationInMinutes: { from: number; to: number };
+  description: string;
+  directions: string[];
+  fitting: string[];
+  order?: number;
+  difficulty: string;
+  workouts: string[];
+  __v: number;
 }
 
-export async function getCourseById(courseId: string) {
-  const res = await fetch(`${API_URL}/courses/${courseId}`);
-  if (!res.ok) throw new Error('Курс не найден');
-  return res.json();
+export interface UserCourse {
+  courseId: string;
 }
 
-export async function addCourse(courseId: string) {
+export interface ProgressData {
+  progressData: number[];
+}
+
+// === УНИВЕРСАЛЬНЫЙ API ЗАПРОС — ЭКСПОРТИРУЕМ! ===
+export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('token');
-  if (!token) throw new Error('Требуется авторизация');
-
-  const res = await fetch(`${API_URL}/users/courses`, {
-    method: 'POST',
+  const config: RequestInit = {
     headers: {
       'Content-Type': '',
-      Authorization: `Bearer ${token}`,
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
+    ...options,
+  };
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, config);
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Сервер недоступен' }));
+    throw new Error(error.message || response.statusText);
+  }
+  return response.json() as Promise<T>;
+}
+
+// === КУРСЫ ===
+export async function getAllCourses(): Promise<Course[]> {
+  return apiRequest<Course[]>('/courses');
+}
+
+export async function getCourseById(courseId: string): Promise<Course> {
+  return apiRequest<Course>(`/courses/${courseId}`);
+}
+
+export async function addCourse(courseId: string): Promise<UserCourse> {
+  return apiRequest<UserCourse>('/users/me/courses', {
+    method: 'POST',
     body: JSON.stringify({ courseId }),
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Не удалось добавить курс');
-  }
-  return res.json();
 }
 
-export async function deleteCourse(courseId: string) {
-  const token = localStorage.getItem('token');
-  if (!token) throw new Error('Требуется авторизация');
+export async function deleteCourse(courseId: string): Promise<void> {
+  return apiRequest<void>(`/users/me/courses/${courseId}`, { method: 'DELETE' });
+}
 
-  const res = await fetch(`${API_URL}/users/courses/${courseId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': '',
-      Authorization: `Bearer ${token}`,
-    },
+export async function getUserProgress(courseId: string): Promise<any> {
+  return apiRequest<any>(`/users/me/progress?courseId=${courseId}`);
+}
+
+export async function saveProgress(
+  courseId: string,
+  workoutId: string,
+  progressData: number[]
+): Promise<ProgressData> {
+  return apiRequest<ProgressData>(`/courses/${courseId}/workouts/${workoutId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ progressData }),
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Не удалось удалить курс');
-  }
-  return res.json();
 }
 
-export async function getWorkoutById(courseId: string, workoutId: string) {
-  const res = await fetch(`${API_URL}/courses/${courseId}/workouts/${workoutId}`);
-  if (!res.ok) throw new Error('Тренировка не найдена');
-  return res.json();
-}
-
-export async function getUserProgress(courseId: string) {
-  const token = localStorage.getItem('token');
-  if (!token) throw new Error('Требуется авторизация');
-
-  const res = await fetch(`${API_URL}/users/progress/${courseId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error('Не удалось загрузить прогресс');
-  return res.json();
-}
-
-export async function saveProgress(courseId: string, workoutId: string, progressData: number[]) {
-  const token = localStorage.getItem('token');
-  if (!token) throw new Error('Требуется авторизация');
-
-  const res = await fetch(`${API_URL}/users/progress`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': '',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ courseId, workoutId, progressData }),
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || 'Не удалось сохранить прогресс');
-  }
-  return res.json();
+export async function getWorkoutById(courseId: string, workoutId: string): Promise<any> {
+  return apiRequest<any>(`/courses/${courseId}/workouts/${workoutId}`);
 }

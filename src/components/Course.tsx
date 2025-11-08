@@ -1,7 +1,6 @@
 // src/components/Course.tsx
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Header from './Header';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/course.css';
 import { useAuth } from '../context/AuthContext';
 import { addCourse } from '../api/fitness';
@@ -32,44 +31,39 @@ const fallbackCourses: Record<string, any> = {
 };
 
 const Course = () => {
-  const { courseId } = useParams<{ courseId: string }>();
-  const { user, token } = useAuth();
+  const { courseId = 'yoga' } = useParams<{ courseId?: string }>();
+  const navigate = useNavigate();
+  const { token, user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [courseData, setCourseData] = useState<any>(null);
 
-  // Загрузка данных с API + запасная заглушка
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!courseId) return;
       try {
         const response = await fetch(`https://wedev-api.sky.pro/api/fitness/courses/${courseId}`);
         if (!response.ok) throw new Error('Курс не найден');
         const data = await response.json();
         setCourseData(data);
       } catch (err) {
-        console.warn('API курса недоступен, используем заглушку');
-        setCourseData(fallbackCourses[courseId] || fallbackCourses.yoga);
+        console.error('Ошибка:', err);
       }
     };
     fetchCourse();
   }, [courseId]);
 
-  const course = courseData || fallbackCourses[courseId || 'yoga'] || fallbackCourses.yoga;
-  const bgColor = bgColors[courseId || 'yoga'];
-  const imageSrc = courseData?.image || fallbackImages[courseId || 'yoga'];
+  const course = courseData || fallbackCourses[courseId] || fallbackCourses.yoga;
+  const bgColor = bgColors[courseId];
+  const imageSrc = courseData?.image || fallbackImages[courseId];
 
-  // Обновление DOM-элементов
   useEffect(() => {
     const heroTitleEl = document.getElementById('hero-title');
-    if (heroTitleEl) heroTitleEl.textContent = course.title || course.nameRU || 'Курс';
-
     const heroImageEl = document.getElementById('hero-image') as HTMLImageElement;
-    if (heroImageEl) heroImageEl.src = imageSrc;
-
     const heroBgEl = document.getElementById('hero-bg');
-    if (heroBgEl) heroBgEl.style.backgroundColor = bgColor;
-
     const directionsListEl = document.getElementById('directions-list');
+
+    if (heroTitleEl) heroTitleEl.textContent = course.title || course.nameRU || 'Курс';
+    if (heroImageEl) heroImageEl.src = imageSrc;
+    if (heroBgEl) heroBgEl.style.backgroundColor = bgColor;
     if (directionsListEl && course.directions) {
       directionsListEl.innerHTML = course.directions
         .map((dir: string) => `
@@ -80,39 +74,39 @@ const Course = () => {
         `)
         .join('');
     }
-  }, [courseId, course, imageSrc, bgColor]);
+  }, [course, imageSrc, bgColor]);
 
-  const handleCtaClick = () => {
+  const handleCtaClick = async () => {
     if (!token) {
       setShowAuthModal(true);
       return;
     }
-    if (user?.selectedCourses?.includes(courseId!)) return;
 
-    addCourse(courseId!).then(() => {
+    if (user?.selectedCourses?.includes(courseId)) {
+      navigate('/profile');
+      return;
+    }
+
+    try {
+      await addCourse(courseId);
       alert('Курс добавлен в профиль!');
-      window.location.reload();
-    }).catch((err: any) => {
+      navigate('/profile');
+    } catch (err: any) {
       alert('Ошибка: ' + err.message);
-    });
+    }
   };
 
-  const isCourseAdded = user?.selectedCourses?.includes(courseId!);
-  const isAuthenticated = !!token;
-
-  if (!course) {
-    return <div className="loading">Загрузка...</div>;
-  }
+  const isCourseAdded = user?.selectedCourses?.includes(courseId);
 
   return (
     <>
-      <Header />
+      {/* ХЕДЕР УДАЛЁН — ОН УЖЕ В App.tsx */}
       <main className="main">
         <div className="container">
           <section className="course-hero">
             <div className="course-hero__bg" id="hero-bg">
-              <h1 className="course-hero__title" id-lg="hero-title">Йога</h1>
-              <img id="hero Ly-image" src={imageSrc} alt="" className="course-hero__image" />
+              <h1 className="course-hero__title" id="hero-title">Йога</h1>
+              <img id="hero-image" src={imageSrc} alt="" className="course-hero__image" />
             </div>
             <div className="course-hero__content">
               <div className="course-hero__benefits">
@@ -155,14 +149,14 @@ const Course = () => {
                 <button
                   onClick={handleCtaClick}
                   className={`btn--cta ${
-                    !isAuthenticated
+                    !token
                       ? 'btn--cta-login'
                       : isCourseAdded
                       ? 'btn--cta-added'
                       : 'btn--cta-add'
                   }`}
                 >
-                  {!isAuthenticated
+                  {!token
                     ? 'Войдите, чтобы добавить курс'
                     : isCourseAdded
                     ? 'Курс уже в вашем профиле'

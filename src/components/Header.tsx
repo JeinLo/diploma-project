@@ -1,7 +1,11 @@
-import { useState } from 'react';
+// src/components/Header.tsx
+import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import UserDropdown from './UserDropdown';
+import { useState } from 'react';
 
 export default function Header() {
+  const { token } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   return (
@@ -15,9 +19,19 @@ export default function Header() {
             </a>
             <p className="header__tagline">Онлайн-тренировки для занятий дома</p>
           </div>
-          <button className="btn btn--login" onClick={() => setIsAuthOpen(true)}>
-            Войти
-          </button>
+
+          <div className="auth-section">
+            {token ? (
+              <UserDropdown />
+            ) : (
+              <button
+                className="btn btn--login"
+                onClick={() => setIsAuthOpen(true)}
+              >
+                Войти
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
