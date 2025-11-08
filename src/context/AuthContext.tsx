@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/auth/login';
 import { register } from '../api/auth/register';
+import { apiRequest } from '../api/fitness'; // ← ИМПОРТИРУЕМ apiRequest!
 
 interface AuthContextType {
   user: { email: string; selectedCourses?: string[] } | null;
@@ -21,20 +22,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      setUser({ 
-        email: localStorage.getItem('userEmail') || 'user@example.com', 
-        selectedCourses: [] 
-      });
+      const email = localStorage.getItem('userEmail') || 'user@example.com';
+      // Восстанавливаем курсы при загрузке
+      const loadUser = async () => {
+        try {
+          const userData = await apiRequest<any>('/users/me');
+          setUser({
+            email,
+            selectedCourses: userData.courses || []
+          });
+        } catch (err) {
+          console.warn('Не удалось загрузить данные пользователя');
+          setUser({ email, selectedCourses: [] });
+        }
+      };
+      loadUser();
     }
   }, [token]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const data = await login(email, password) as { token: string }; // ЯВНО УКАЗАЛИ ТИП
+      const data = await login(email, password) as { token: string };
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', email);
+
+      // Используем apiRequest вместо сырого fetch
+      const userData = await apiRequest<any>('/users/me');
+
       setToken(data.token);
-      setUser({ email, selectedCourses: [] });
+      setUser({
+        email,
+        selectedCourses: userData.courses || []
+      });
+
       navigate('/profile');
     } catch (err: any) {
       console.error('Login error:', err);

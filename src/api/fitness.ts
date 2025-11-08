@@ -1,5 +1,4 @@
 // src/api/fitness.ts
-
 const BASE_URL = 'https://wedev-api.sky.pro/api/fitness';
 
 // === ТИПЫ ===
@@ -27,22 +26,35 @@ export interface ProgressData {
   progressData: number[];
 }
 
-// === УНИВЕРСАЛЬНЫЙ API ЗАПРОС — ЭКСПОРТИРУЕМ! ===
+// === УНИВЕРСАЛЬНЫЙ API ЗАПРОС ===
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('token');
+
+  // Добавляем Content-Type только если есть body
+  const hasBody = options.body !== undefined;
+  const contentType = hasBody ? '' : undefined;
+
   const config: RequestInit = {
     headers: {
-      'Content-Type': '',
+      ...(contentType && { 'Content-Type': contentType }),
       ...(token && { Authorization: `Bearer ${token}` }),
     },
     ...options,
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Сервер недоступен' }));
-    throw new Error(error.message || response.statusText);
+    let errorMessage = 'Сервер недоступен';
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorData.error || response.statusText;
+    } catch {
+      // ignore
+    }
+    throw new Error(errorMessage);
   }
+
   return response.json() as Promise<T>;
 }
 
