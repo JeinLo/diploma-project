@@ -152,7 +152,7 @@ const Course = () => {
                 </ul>
                 <button
                   onClick={handleCtaClick}
-                  className={`btn--cta ${
+                  className={` ${
                     !token
                       ? 'btn--cta-login'
                       : isCourseAdded

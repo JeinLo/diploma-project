@@ -1,4 +1,3 @@
-/* src/styles/course.css — ТОЛЬКО ДЛЯ Course.tsx */
 .main { padding: 40px 0; }
 
 .course-hero { margin-bottom: 60px; display: flex; flex-direction: column; gap: 60px; }
@@ -9,26 +8,29 @@
   border-radius: 30px;
   overflow: hidden;
   margin: 0 auto;
-  position: relative;
   background-color: #FFC700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 .course-hero__title {
-  position: absolute;
-  top: 23%;
-  left: 40px;
-  font-weight: 500;
+ font-weight: 500;
   font-size: 60px;
   color: #FFFFFF;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .course-hero__image {
-  position: absolute;
   width: 437px;
   height: 557px;
-  top: -162px;
-  left: 697px;
   object-fit: contain;
+  object-position: bottom right;
+  margin-left: auto;
+  transform: translateY(20px); 
 }
 
 .section-title { font-size: 40px; font-weight: 600; color: #000; margin-bottom: 40px; }
@@ -44,7 +46,7 @@
 .benefit-item p { font-size: 24px; }
 
 .directions { margin-bottom: 80px; }
-/* ──────────────────────────────────────────────────────────────────────── */
+
 /* 1. directions-block — восстановлен полный стиль из требования           */
 .directions-block {
   width: 1200px;
@@ -58,10 +60,8 @@
   justify-content: center;
   align-content: space-around;
   margin: 0 auto;
-  /* новые свойства из задачи */
   flex-direction: column;
 }
-/* ──────────────────────────────────────────────────────────────────────── */
 
 .direction-item {
   display: flex;
@@ -88,7 +88,7 @@
 .cta-card__bg { position: absolute; bottom: 0; right: 97px; width: 600px; opacity: 0.8; z-index: 1; }
 .cta-card__content { max-width: 400px; z-index: 2; }
 
-/* ──────────────────────────────────────────────────────────────────────── */
+
 /* 2. cta-card__title — точные размеры + типографика                       */
 .cta-card__title {
   width: 398px;
@@ -102,7 +102,7 @@
   display: flex;
   align-items: center;
 }
-/* ──────────────────────────────────────────────────────────────────────── */
+
 
 /* 3. cta-card__list — размеры + типографика */
 .cta-card__list {
@@ -127,18 +127,20 @@
   color: 000000a6;
   font-weight: bold;
 }
-/* ──────────────────────────────────────────────────────────────────────── */
+
+.mobile-cta-images {
+  display: none;
+}
 
 .cta-card__image { position: absolute; right: 120px; bottom: 47px; width: 450px; z-index: 3; }
 
-/* ──────────────────────────────────────────────────────────────────────── */
 /* 4. Кнопки CTA (включая «Наверх ↑» и «Войдите…»)                         */
 .btn--cta,
 .btn--cta-login,
 .btn--cta-added,
 .btn--cta-add,
-.btn--cta-scroll {                     /* добавлен scroll */
-  width: 437px;                        /* 127px только для scroll */
+.btn--cta-scroll {                     
+  width: 437px;     
   height: 52px;
   padding: 0 20px;
   border-radius: 46px;
@@ -148,9 +150,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;                           /* требуемый gap */
+  gap: 10px;                          
   transition: all 0.2s ease;
   cursor: pointer;
+  border: #BCEC30;
+  background: #BCEC30;
 }
 .btn--cta,
 .btn--cta-login,
@@ -180,7 +184,7 @@
 
 /* === МОБИЛЬНАЯ ВЕРСИЯ (до 868px) === */
 @media (max-width: 868px) {
-  /* === УБИРАЕМ ФОН И ЗАГОЛОВОК ГЕРОЯ, ОСТАВЛЯЕМ ТОЛЬКО ИЗОБРАЖЕНИЕ === */
+  /* === УБИРАЕМ ФОН И ЗАГОЛОВОК, ОСТАВЛЯЕМ ТОЛЬКО ИЗОБРАЖЕНИЕ === */
   .course-hero__bg {
     display: none;
   }
@@ -267,55 +271,32 @@
     line-height: 1.2;
   }
 
-.directions-block::after {
-  content: "";
-  display: block;
-  width: 300px;
-  height: auto;
-  background: url('/images/Vector.svg') no-repeat center / contain;
-  margin: -40px auto 20px;
-  z-index: 2;
-}
-
-/* Добавляем второе изображение поверх первого — используем ::before */
-.directions-block::before {
-  content: "";
-  display: block;
-  width: 300px;
-  height: auto;
-  background: url('/images/img_0.svg') no-repeat center / contain;
-  margin: -40px auto 20px;
-  z-index: 3;
-}
-
 .mobile-cta-images {
+  display: block;
   position: relative;
-  width: 408px;
-  height: 70px;
-  margin: 0;
-  padding: 0;
+  width: 118%;
+  max-width: 400px;
+  height: 126px;
+  margin: -60px auto 40px;
   overflow: visible;
 }
 .mobile-cta-images .cta-card__bg-mobile {
   position: absolute;
-  top: 28px;
-  left: 37%;
+  top: 81px;
+  left: 41%;
   transform: translateX(-50%);
-  width: 400px;
   height: auto;
   opacity: 0.8;
-  background: url('/images/Vector.svg') no-repeat center / contain;
 }
 
 /* Изображение бегуна — поверх фона */
 .mobile-cta-images .cta-card__image-mobile {
-  position: absolute;
-  top: -102px;
-  left: 58%;
+  position: relative;
+  top: -43px;
+  left: 62%;
   transform: translateX(-50%);
-  width: 300px;
+  width: 302px;
   height: auto;
-  background: url('/images/img_0.svg') no-repeat center / contain;
 }
 
   /* Изображение бегуна — перемещено между блоками */
@@ -334,7 +315,7 @@
     margin-bottom: 40px;
   }
   .cta-card {
-  width: 343px !important;
+  width: 312px;
   height: auto !important;
   border-radius: 30px !important;
   padding: 24px !important;
