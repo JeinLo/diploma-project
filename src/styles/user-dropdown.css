@@ -135,3 +135,57 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* === МОБИЛЬНАЯ ВЕРСИЯ (до 768px) === */
+@media (max-width: 768px) {
+  .user-menu-trigger {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+  }
+  .user-name {
+    font-size: 18px;
+  }
+  .user-arrow {
+    width: 10px;
+    height: 6px;
+    top: 0;
+    left: -1px;
+  }
+
+  .user-dropdown {
+    width: 220px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .user-dropdown__inner {
+    padding: 15px;
+    gap: 10px;
+  }
+  .user-dropdown__header {
+    text-align: center;
+  }
+  .user-dropdown__name {
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .user-dropdown__email {
+    font-size: 14px;
+  }
+  .user-dropdown__buttons {
+    width: 180px;
+    gap: 8px;
+  }
+  .btn--profile,
+  .btn--logout {
+    width: 100%;
+    height: 48px;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 40px;
+  }
+}
