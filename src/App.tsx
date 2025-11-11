@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Home from './components/Home';
-import Profile from './components/Profile';
-import Course from './components/Course';
 import { AuthProvider } from './context/AuthContext';
-import Passing from './components/Passing';
+import Passing from './components/Passing/Passing';
 import './index.css';
+import Course from './components/Course/Course';
+import Home from './components/Home/Home';
+import Profile from './components/Profile/Profile';
 
 export default function App() {
   return (
@@ -17,8 +17,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/course/:id" element={<Course />} />
           <Route path="*" element={<Home />} />
-          <Route path="/passing" element={<Passing />} /> 
-          {/* <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} /> */}
+          <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} />
         </Routes>
       </div>
     </AuthProvider>

@@ -1,12 +1,12 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api/auth/login';
-import { register } from '../api/auth/register';
-import { apiRequest } from '../api/fitness'; // ← ИМПОРТИРУЕМ apiRequest!
+import { login as apiLogin } from '../api/auth/login';
+import { register as apiRegister } from '../api/auth/register';
+import { getUser } from '../api/users';
+import type { User } from '../api/types';
 
 interface AuthContextType {
-  user: { email: string; selectedCourses?: string[] } | null;
+  user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
@@ -16,20 +16,19 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthContextType['user']>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
       const email = localStorage.getItem('userEmail') || 'user@example.com';
-      // Восстанавливаем курсы при загрузке
       const loadUser = async () => {
         try {
-          const userData = await apiRequest<any>('/users/me');
+          const userData = await getUser();
           setUser({
             email,
-            selectedCourses: userData.courses || []
+            selectedCourses: userData.user.selectedCourses || [],
           });
         } catch (err) {
           console.warn('Не удалось загрузить данные пользователя');
@@ -42,32 +41,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const data = await login(email, password) as { token: string };
+      const data = await apiLogin({ email, password });
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', email);
-
-      // Используем apiRequest вместо сырого fetch
-      const userData = await apiRequest<any>('/users/me');
-
+      const userData = await getUser();
       setToken(data.token);
       setUser({
         email,
-        selectedCourses: userData.courses || []
+        selectedCourses: userData.user.selectedCourses || [],
       });
-
       navigate('/profile');
-    } catch (err: any) {
-      console.error('Login error:', err);
-      throw err;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw err;
+      } else {
+        throw new Error('Ошибка входа');
+      }
     }
   };
 
   const handleRegister = async (email: string, password: string) => {
     try {
-      await register(email, password);
+      await apiRegister({ email, password });
       await handleLogin(email, password);
-    } catch (err: any) {
-      throw err;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw err;
+      } else {
+        throw new Error('Ошибка регистрации');
+      }
     }
   };
 
@@ -80,7 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login: handleLogin, register: handleRegister, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, login: handleLogin, register: handleRegister, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

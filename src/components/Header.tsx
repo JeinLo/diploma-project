@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
 import UserDropdown from './UserDropdown';

@@ -1,4 +1,3 @@
-// src/components/AuthModal.tsx
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import '../styles/auth-modal.css';
@@ -8,7 +7,7 @@ interface AuthModalProps {
   onClose: () => void;
 }
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +38,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const newErrors: any = {};
     if (!email) newErrors.email = 'Заполните поле';
     else if (!isLogin && !/^\S+@\S+\.\S+$/.test(email))
-      newErrors.email = 'Введите коррек ный Email';
+      newErrors.email = 'Введите корректный Email';
 
     if (!password) newErrors.password = 'Заполните поле';
     else if (password.length < 6)
@@ -70,7 +69,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       } else {
         await register(email, password);
       }
-      onClose(); // Просто закрываем — НЕ ПРЫГАЕМ НИКУДА
+      onClose();
     } catch (err: any) {
       setErrors({ general: err.message || 'Ошибка сервера. Попробуйте позже.' });
     }
@@ -148,3 +147,5 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     </div>
   );
 }
+
+export default AuthModal;

@@ -1,8 +1,14 @@
-import { apiRequest } from '../fitness';
+import { apiRequest } from '../client';
+import type { RegisterResponse } from './types';
 
-export async function register(email: string, password: string) {
-  return apiRequest('/auth/register', {
+export interface RegisterPayload {
+  email: string;
+  password: string;
+}
+
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
+  return apiRequest<RegisterResponse>('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(payload),
   });
 }

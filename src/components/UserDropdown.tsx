@@ -17,7 +17,6 @@ export default function UserDropdown() {
         setIsOpen(false);
       }
     };
-
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
@@ -48,7 +47,6 @@ export default function UserDropdown() {
         <span className="user-name">{displayName}</span>
         <img src="/images/strelka.svg" alt="Стрелка" className="user-arrow" />
       </button>
-
       {isOpen && (
         <div className="user-dropdown">
           <div className="user-dropdown__inner">
