@@ -107,16 +107,6 @@
   grid-auto-flow: row;
 }
 
-/* 3. ПРИНУДИТЕЛЬНЫЙ ПОРЯДОК ЧЕРЕЗ data-id */
-.card[data-id="yoga"]       { order: 1; }
-.card[data-id="stretching"] { order: 2; }
-.card[data-id="fitness"]    { order: 3; }
-.card[data-id="step"]       { order: 4; }
-.card[data-id="bodyflex"]   { order: 5; }
-
-/* Любой неизвестный ID — в конец */
-.card { order: 999; }
-
 .card {
   background: white;
   border-radius: 30px;

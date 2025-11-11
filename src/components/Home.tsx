@@ -1,4 +1,3 @@
-// src/components/Home.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCourses, addCourse } from '../api/fitness';
@@ -6,7 +5,7 @@ import '../styles/home.css';
 import AuthModal from './AuthModal';
 import { useAuth } from '../context/AuthContext';
 
-type CourseType = {
+interface CourseType {
   _id: string;
   nameRU: string;
   nameEN: string;
@@ -20,22 +19,84 @@ type CourseType = {
   difficulty: string;
   workouts: string[];
   __v: number;
-};
+}
 
-const FIXED_ORDER: string[] = ['yoga', 'stretching', 'fitness', 'step', 'bodyflex'];
-const fallbackImages: Record<string, string> = {
-  Yoga: '/images/image_1.svg',
-  Stretching: '/images/image_2.svg',
-  Fitness: '/images/image_3.svg',
-  StepAirobic: '/images/image_4.svg',
-  Bodyflex: '/images/image_5.svg',
-};
 const fallbackCourses: CourseType[] = [
-  { _id: 'yoga', nameRU: 'Йога', nameEN: 'Yoga', durationInDays: 20, dailyDurationInMinutes: { from: 10, to: 30 }, description: '', directions: [], fitting: [], difficulty: 'Легко', workouts: [], __v: 0 },
-  { _id: 'stretching', nameRU: 'Стретчинг', nameEN: 'Stretching', durationInDays: 40, dailyDurationInMinutes: { from: 30, to: 45 }, description: '', directions: [], fitting: [], difficulty: 'Средне', workouts: [], __v: 0 },
-  { _id: 'fitness', nameRU: 'Фитнес', nameEN: 'Fitness', durationInDays: 20, dailyDurationInMinutes: { from: 45, to: 60 }, description: '', directions: [], fitting: [], difficulty: 'Средне', workouts: [], __v: 0 },
-  { _id: 'step', nameRU: 'Степ-аэробика', nameEN: 'StepAirobic', durationInDays: 25, dailyDurationInMinutes: { from: 20, to: 50 }, description: '', directions: [], fitting: [], difficulty: 'Сложно', workouts: [], __v: 0 },
-  { _id: 'bodyflex', nameRU: 'Бодифлекс', nameEN: 'Bodyflex', durationInDays: 15, dailyDurationInMinutes: { from: 50, to: 70 }, description: '', directions: [], fitting: [], difficulty: 'Сложно', workouts: [], __v: 0 },
+  {
+    _id: 'ab1c3f',
+    nameRU: 'Йога',
+    nameEN: 'Yoga',
+    image: '/images/image_1.svg',
+    durationInDays: 20,
+    dailyDurationInMinutes: { from: 10, to: 30 },
+    description: 'Философия здорового образа жизни',
+    directions: ['Йога для новичков'],
+    fitting: ['Давно хотел попробовать'],
+    difficulty: 'начальный',
+    workouts: ['3yvozj', 'hfgxlo'],
+    __v: 0,
+    order: 1
+  },
+  {
+    _id: 'kfpq8e',
+    nameRU: 'Стретчинг',
+    nameEN: 'Stretching',
+    image: '/images/image_2.svg',
+    durationInDays: 40,
+    dailyDurationInMinutes: { from: 30, to: 45 },
+    description: 'Растяжка и гибкость',
+    directions: ['статический', 'динамический'],
+    fitting: ['Улучшить осанку'],
+    difficulty: 'начальный',
+    workouts: ['9mefwq'],
+    __v: 0,
+    order: 2
+  },
+  {
+    _id: 'ypox9r',
+    nameRU: 'Фитнес',
+    nameEN: 'Fitness',
+    image: '/images/image_3.svg',
+    durationInDays: 20,
+    dailyDurationInMinutes: { from: 45, to: 60 },
+    description: 'Танцевальный фитнес',
+    directions: ['Зумба'],
+    fitting: ['Любите танцы'],
+    difficulty: 'сложный',
+    workouts: ['gh7bd5'],
+    __v: 0,
+    order: 3
+  },
+  {
+    _id: '6i67sm',
+    nameRU: 'Степ-аэробика',
+    nameEN: 'StepAirobic',
+    image: '/images/image_4.svg',
+    durationInDays: 25,
+    dailyDurationInMinutes: { from: 20, to: 50 },
+    description: 'Аэробика с платформой',
+    directions: ['Для начинающих'],
+    fitting: ['Быстро сбросить вес'],
+    difficulty: 'средний',
+    workouts: ['e9ghsb'],
+    __v: 0,
+    order: 4
+  },
+  {
+    _id: 'q02a6i',
+    nameRU: 'Бодифлекс',
+    nameEN: 'BodyFlex',
+    image: '/images/image_5.svg',
+    durationInDays: 15,
+    dailyDurationInMinutes: { from: 50, to: 70 },
+    description: 'Дыхательная гимнастика',
+    directions: ['базовый'],
+    fitting: ['Укрепить легкие'],
+    difficulty: 'сложный',
+    workouts: ['xlpkqy'],
+    __v: 0,
+    order: 5
+  }
 ];
 
 export default function Home() {
@@ -51,16 +112,14 @@ export default function Home() {
       try {
         const data = await getAllCourses();
         if (Array.isArray(data) && data.length > 0) {
-          const sorted = [...data].sort((a, b) => {
-            const aIndex = FIXED_ORDER.indexOf(a._id);
-            const bIndex = FIXED_ORDER.indexOf(b._id);
-            if (aIndex === -1) return 1;
-            if (bIndex === -1) return -1;
-            return aIndex - bIndex;
+          const sorted = [...data].sort((a: CourseType, b: CourseType) => {
+            const aOrder = a.order ?? 999;
+            const bOrder = b.order ?? 999;
+            return aOrder - bOrder;
           });
           setCourses(sorted);
         } else {
-          setCourses(fallbackCourses);
+          throw new Error('Нет данных');
         }
       } catch (err: any) {
         console.warn('API недоступен:', err.message);
@@ -73,7 +132,7 @@ export default function Home() {
     loadCourses();
   }, []);
 
-  const handlePlusClick = async (e: React.MouseEvent, courseId: string) => {
+  const handlePlusClick = async (e: React.MouseEvent<HTMLButtonElement>, courseId: string) => {
     e.stopPropagation();
     if (!token) {
       setIsAuthOpen(true);
@@ -82,7 +141,7 @@ export default function Home() {
     try {
       await addCourse(courseId);
       alert('Курс добавлен в профиль!');
-      navigate('/profile'); // ПЕРЕХОД В ПРОФИЛЬ
+      navigate('/profile');
     } catch (err: any) {
       alert('Ошибка: ' + err.message);
     }
@@ -92,7 +151,9 @@ export default function Home() {
     navigate(`/course/${courseId}`);
   };
 
-  if (loading) return <div className="loading">Загрузка курсов...</div>;
+  if (loading) {
+    return <div className="loading">Загрузка курсов...</div>;
+  }
 
   return (
     <>
@@ -106,23 +167,32 @@ export default function Home() {
               <div className="speech-bubble">
                 Измени своё тело за полгода!
               </div>
-              <img src="/images/str.svg" alt="Стрелка вниз" className="bubble-arrow-separate" />
+              <img
+                src="/images/str.svg"
+                alt="Стрелка вниз"
+                className="bubble-arrow-separate"
+              />
             </div>
           </div>
+
           {error && <div className="error-banner">{error}</div>}
+
           <div className="cards">
             {courses.map((course) => {
-              const imageSrc = course.image || fallbackImages[course.nameEN] || '/images/image_5.svg';
+              const imageSrc = course.image || `/images/image_${course.order}.svg` || '/images/image_1.svg';
               return (
                 <article
                   key={course._id}
                   className="card"
-                  data-id={course._id}
                   onClick={() => handleCardClick(course._id)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="card__image-wrapper">
-                    <img src={imageSrc} alt={course.nameRU} className="card__image" />
+                    <img
+                      src={imageSrc}
+                      alt={course.nameRU}
+                      className="card__image"
+                    />
                     <button
                       className="card__play-btn"
                       onClick={(e) => handlePlusClick(e, course._id)}
@@ -130,24 +200,29 @@ export default function Home() {
                       <img src="/images/plus.svg" alt="Добавить" className="plus-icon" />
                     </button>
                   </div>
+
                   <div className="card__content">
                     <h3 className="card__title">{course.nameRU}</h3>
                     <div className="card__meta">
                       <div className="card__meta-badge card__meta-badge--calendar">
-                        <img src="/images/icon_calendar.svg" alt="" /> {course.durationInDays} дней
+                        <img src="/images/icon_calendar.svg" alt="" />
+                        {course.durationInDays} дней
                       </div>
                       <div className="card__meta-badge card__meta-badge--time">
-                        <img src="/images/icon_time.svg" alt="" /> {course.dailyDurationInMinutes.from}-{course.dailyDurationInMinutes.to} мин/день
+                        <img src="/images/icon_time.svg" alt="" />
+                        {course.dailyDurationInMinutes.from}-{course.dailyDurationInMinutes.to} мин/день
                       </div>
                     </div>
                     <div className="card__meta-badge card__meta-badge--difficulty">
-                      <img src="/images/progress.svg" alt="" /> Сложность
+                      <img src="/images/progress.svg" alt="" />
+                      Сложность
                     </div>
                   </div>
                 </article>
               );
             })}
           </div>
+
           <div className="cta">
             <button
               className="btn btn--cta btn--cta-scroll"
@@ -158,6 +233,7 @@ export default function Home() {
           </div>
         </div>
       </main>
+
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
