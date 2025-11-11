@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/profile.css';
-import { deleteCourse, getAllCourses } from '../api/fitness';
+import { deleteCourse, getAllCourses, getUser } from '../api/fitness';
+import {Course} from '../api/fitness'
 
 const bgColors: Record<string, string> = {
   ab1c3f: '#FFC700',
@@ -23,7 +24,7 @@ const progressMap: Record<string, number> = {
 export default function Profile() {
   const { user, logout, token } = useAuth();
   const navigate = useNavigate();
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,13 +39,10 @@ export default function Profile() {
         const allCourses = await getAllCourses();
 
         // 2. Получаем данные пользователя
-        const userResponse = await fetch('https://wedev-api.sky.pro/api/fitness/users/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const userData = await userResponse.json();
+              const userData = await getUser();
 
         // 3. БЕРЁМ selectedCourses, а не courses!
-        const userCourseIds = userData.selectedCourses || [];
+        const userCourseIds = userData.user.selectedCourses || [];
 
         // 4. Находим курсы по ID
         const userCourses = allCourses

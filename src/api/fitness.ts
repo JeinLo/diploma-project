@@ -18,6 +18,8 @@ export interface Course {
   __v: number;
 }
 
+type User = {email: string; selectedCourses:string[]}
+
 export interface UserCourse {
   courseId: string;
 }
@@ -42,6 +44,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
     ...options,
   };
 
+
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
 
   if (!response.ok) {
@@ -62,6 +65,10 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
 export async function getAllCourses(): Promise<Course[]> {
   return apiRequest<Course[]>('/courses');
 }
+export async function getUser(): Promise<{user:User}> {
+  return apiRequest<{user:User}>(`/user/me`);
+}
+
 
 export async function getCourseById(courseId: string): Promise<Course> {
   return apiRequest<Course>(`/courses/${courseId}`);

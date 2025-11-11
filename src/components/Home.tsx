@@ -4,24 +4,9 @@ import { getAllCourses, addCourse } from '../api/fitness';
 import '../styles/home.css';
 import AuthModal from './AuthModal';
 import { useAuth } from '../context/AuthContext';
+import {Course} from '../api/fitness'
 
-interface CourseType {
-  _id: string;
-  nameRU: string;
-  nameEN: string;
-  image?: string;
-  durationInDays: number;
-  dailyDurationInMinutes: { from: number; to: number };
-  description: string;
-  directions: string[];
-  fitting: string[];
-  order?: number;
-  difficulty: string;
-  workouts: string[];
-  __v: number;
-}
-
-const fallbackCourses: CourseType[] = [
+const fallbackCourses: Course[] = [
   {
     _id: 'ab1c3f',
     nameRU: 'Йога',
