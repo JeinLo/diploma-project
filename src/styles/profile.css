@@ -86,15 +86,30 @@
   transition: all 0.2s;
 }
 
-.course-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+.course-card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12); 
+}
 
-.course-image-wrapper { position: relative; height: 325px; overflow: hidden; }
-.card__image { width: 360px; height: 325px; object-fit: contain; border-radius: 30px; }
+.course-image-wrapper { 
+  position: relative; 
+  height: 325px; 
+  overflow: hidden; 
+}
+
+.card__image { 
+  width: 360px; 
+  height: 325px; 
+  object-fit: contain; 
+  border-radius: 30px; 
+}
 
 .card__play-btn {
   position: absolute;
-  top: 20px; right: 20px;
-  width: 26.67px; height: 26.67px;
+  top: 20px; 
+  right: 20px;
+  width: 26.67px; 
+  height: 26.67px;
   background: transparent;
   padding: 0;
   cursor: pointer;
@@ -106,18 +121,80 @@
   filter: brightness(0) invert(1);
 }
 
-.course-content { padding: 20px; flex-grow: 1; justify-content: flex-end; display: flex; flex-direction: column; }
-.course-title { font-size: 32px; font-weight: 500; margin-bottom: 12px; color: #222; }
-.course-meta { display: flex; gap: 12px; margin-bottom: 12px; font-size: 16px; color: #666; }
-.course-meta-item { display: flex; align-items: center; gap: 6px; color: #000; }
-.course-meta-item img { width: 16px; height: 16px; }
-.course-link { display: flex; align-items: center; gap: 6px; color: #000; margin-bottom: 12px; }
-.course-link img { width: 16px; height: 16px; }
+.course-content { 
+  padding: 20px; 
+  flex-grow: 1; 
+  justify-content: flex-end; 
+  display: flex; 
+  flex-direction: column; 
+}
 
-.course-progress { margin: 10px 0 40px; display: flex; flex-direction: column; gap: 10px; }
-.progress-text { font-size: 18px; color: #000; }
-.progress-bar { height: 8px; background: #E0E0E0; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: #4A90E2; border-radius: 4px; transition: width 0.3s ease; }
+.course-title { 
+  font-size: 32px; 
+  font-weight: 500; 
+  margin-bottom: 12px; 
+  color: #222; 
+}
+
+.course-meta { 
+  display: flex; 
+  gap: 12px; 
+  margin-bottom: 12px; 
+  font-size: 16px; 
+  color: #666; 
+}
+
+.course-meta-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  color: #000; 
+}
+
+.course-meta-item img { 
+  width: 16px; 
+  height: 16px; 
+}
+
+.course-link { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  color: #000; 
+  margin-bottom: 12px; 
+}
+
+.course-link img { 
+  width: 16px; 
+  height: 16px; 
+}
+
+/* === ПРОГРЕСС-БАР И КНОПКА В КАРТОЧКЕ КУРСА === */
+.course-progress { 
+  margin: 10px 0 40px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.progress-text { 
+  font-size: 18px; 
+  color: #000; 
+}
+
+.progress-bar { 
+  height: 8px; 
+  background: #E0E0E0; 
+  border-radius: 4px; 
+  overflow: hidden; 
+}
+
+.progress-fill { 
+  height: 100%; 
+  background: #4A90E2; 
+  border-radius: 4px; 
+  transition: width 0.3s ease; 
+}
 
 .course-btn {
   background: #BCEC30;
@@ -127,11 +204,19 @@
   font-size: 16px;
   font-weight: 500;
   margin-top: auto;
+  text-align: center;
+  text-decoration: none;
+  display: block;
 }
 
 .course-btn:hover {
   background: #a8d62a;
   transform: translateY(-2px);
+}
+
+/* === УДАЛЕНИЕ — КНОПКА МИНУС === */
+.course-delete img {
+  filter: brightness(0) invert(1);
 }
 
 .courses-empty {
@@ -142,17 +227,7 @@
   font-size: 18px;
 }
 
-/* Адаптив */
-@media (max-width: 868px) {
-  .profile-card { flex-direction: column; text-align: center; height: auto; padding: 20px; }
-  .profile-avatar { width: 120px; height: 120px; border-radius: 50%; }
-  .profile-name, .profile-login, .btn-logout { margin-left: 0; text-align: center; }
-  .btn--logout-mobile { display: block; }
-  #logout-btn-desktop { display: none; }
-  .courses-grid { grid-template-columns: 1fr; }
-}
-
-/* === МОБИЛЬНАЯ ВЕРСИЯ (до 868px) === */
+/* === АДАПТИВ (до 868px) === */
 @media (max-width: 868px) {
   /* === ЗАГОЛОВОК СТРАНИЦЫ === */
   .page-title {
@@ -172,6 +247,7 @@
     align-items: center;
     gap: 15px;
   }
+
   .profile-info {
     display: flex;
     flex-direction: column;
@@ -179,6 +255,7 @@
     gap: 20px;
     text-align: left;
   }
+
   .profile-avatar {
     width: 141px !important;
     height: 141px !important;
@@ -228,7 +305,7 @@
     gap: 24px;
   }
 
-  /* === КАРТОЧКИ КУРСОВ — КАК В HOME === */
+  /* === КАРТОЧКИ КУРСОВ === */
   .course-card {
     width: 343px !important;
     height: 492px !important;
@@ -236,11 +313,13 @@
     padding-bottom: 15px !important;
     margin: 0 auto;
   }
+
   .course-image-wrapper {
     height: 325px !important;
     overflow: hidden;
     border-radius: 30px 30px 0 0;
   }
+
   .card__image {
     width: auto !important;
     height: 100% !important;
@@ -248,19 +327,37 @@
     object-fit: contain;
     margin: 0 auto;
   }
+
   .course-title {
     font-size: 24px !important;
     font-weight: 500 !important;
     margin-bottom: 12px;
   }
+
   .course-meta,
   .course-link {
     font-size: 14px !important;
     gap: 8px !important;
   }
+
   .course-meta-item {
     height: 32px !important;
     padding: 6px 8px !important;
     font-size: 12px !important;
+    background: #F7F7F7;
+    border-radius: 50px;
+  }
+
+  .course-progress {
+    margin: 10px 0 20px !important;
+  }
+
+  .progress-text {
+    font-size: 16px !important;
+  }
+
+  .course-btn {
+    font-size: 14px !important;
+    padding: 10px !important;
   }
 }

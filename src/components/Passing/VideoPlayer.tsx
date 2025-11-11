@@ -15,7 +15,7 @@ export function VideoPlayer({ videoUrl }: VideoPlayerProps) {
     <div className="video-wrapper">
       <iframe
         className="youtube-player"
-        src={`https://www.youtube.com/embed/${videoUrl}?enablejsapi=1`}
+        src={`https://www.youtube.com/embed/gJPs7b8SpVw`}
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

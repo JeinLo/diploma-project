@@ -1,5 +1,3 @@
-// src/components/Course/DirectionsSection.tsx
-
 import { useEffect } from 'react';
 
 interface DirectionsSectionProps {

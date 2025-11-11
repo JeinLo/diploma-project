@@ -17,7 +17,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/course/:id" element={<Course />} />
           <Route path="*" element={<Home />} />
-          <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} />
+          <Route path="/passing" element={<Passing />} />
         </Routes>
       </div>
     </AuthProvider>

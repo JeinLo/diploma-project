@@ -2,6 +2,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useProfileData } from './useProfileData';
 import { UserCourseCard } from './UserCourseCard';
 import { Link } from 'react-router-dom';
+import '../../styles/profile.css';
 
 export default function Profile() {
   const { logout } = useAuth();

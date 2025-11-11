@@ -1,11 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { CourseWithProgress } from '../../api/types';
-
-interface UserCourseCardProps {
-  course: CourseWithProgress;
-  onDelete: (id: string) => void;
-  getButtonText: (progress: number) => string;
-}
 
 const bgColors: Record<string, string> = {
   ab1c3f: '#FFC700',
@@ -15,7 +9,22 @@ const bgColors: Record<string, string> = {
   q02a6i: '#7D458C',
 };
 
+interface UserCourseCardProps {
+  course: CourseWithProgress;
+  onDelete: (id: string) => void;
+  getButtonText: (progress: number) => string;
+}
+
 export function UserCourseCard({ course, onDelete, getButtonText }: UserCourseCardProps) {
+  const navigate = useNavigate();
+
+  const handleStartWorkout = () => {
+    const firstWorkoutId = course.workouts?.[0] || '1';
+    navigate('/passing', {
+      state: { courseId: course._id, workoutId: firstWorkoutId }
+    });
+  };
+
   return (
     <article key={course._id} className="course-card">
       <div
@@ -53,9 +62,9 @@ export function UserCourseCard({ course, onDelete, getButtonText }: UserCourseCa
             <div className="progress-fill" style={{ width: `${course.progress}%` }} />
           </div>
         </div>
-        <Link to={`/course/${course._id}`} className="course-btn">
+        <button onClick={handleStartWorkout} className="course-btn">
           {getButtonText(course.progress)}
-        </Link>
+        </button>
       </div>
     </article>
   );

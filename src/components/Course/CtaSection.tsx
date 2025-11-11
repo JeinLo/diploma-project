@@ -1,10 +1,8 @@
-// src/components/Course/CtaSection.tsx
-
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { addCourse } from '../../api/users';
-import AuthModal from '../AuthModal'; // ← прямой импорт
+import AuthModal from '../AuthModal';
 
 interface CtaSectionProps {
   courseId: string;

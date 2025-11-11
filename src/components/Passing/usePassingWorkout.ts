@@ -1,7 +1,5 @@
-// src/components/Passing/usePassingWorkout.ts
-
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { getWorkoutById, saveWorkoutProgress } from '../../api/workouts';
 import { getCourseProgress } from '../../api/users';
 import type { Workout, WorkoutProgress } from '../../api/types';
@@ -18,7 +16,8 @@ interface UsePassingWorkoutResult {
 }
 
 export function usePassingWorkout(): UsePassingWorkoutResult {
-  const { courseId, workoutId } = useParams<{ courseId: string; workoutId: string }>();
+  const location = useLocation();
+  const { courseId, workoutId } = location.state || {};
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [progress, setProgress] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,11 +25,15 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (!courseId || !workoutId) return;
+    if (!courseId || !workoutId) {
+      setError('Нет данных о тренировке');
+      setLoading(false);
+      return;
+    }
 
     const loadWorkoutAndProgress = async () => {
       try {
-        const workoutData = await getWorkoutById(courseId, workoutId);
+        const workoutData = await getWorkoutById(workoutId);
         setWorkout(workoutData);
 
         const initial = Array(workoutData.exercises.length).fill(0);
@@ -38,7 +41,7 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
 
         const savedProgress = await getCourseProgress(courseId);
         const current = savedProgress.workoutsProgress.find(
-          (wp: WorkoutProgress) => wp.workoutId === workoutId // ✅ типизация wp
+          (wp: WorkoutProgress) => wp.workoutId === workoutId
         );
         if (current) {
           setProgress(current.progressData);
