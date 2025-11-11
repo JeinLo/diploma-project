@@ -25,12 +25,15 @@
 }
 
 .course-hero__image {
-  width: 437px;
+  width: 374px;
   height: 557px;
   object-fit: contain;
   object-position: bottom right;
   margin-left: auto;
   transform: translateY(20px); 
+  position: relative;
+  top: -137px;
+  right: 145px;
 }
 
 .section-title { font-size: 40px; font-weight: 600; color: #000; margin-bottom: 40px; }
@@ -85,7 +88,14 @@
   align-items: flex-start;
 }
 
-.cta-card__bg { position: absolute; bottom: 0; right: 97px; width: 600px; opacity: 0.8; z-index: 1; }
+.cta-card__bg {
+    position: absolute;
+    bottom: 0px;
+    right: 12px;
+    width: 565px;
+    opacity: 0.8;
+    z-index: 1;
+}
 .cta-card__content { max-width: 400px; z-index: 2; }
 
 
@@ -132,7 +142,13 @@
   display: none;
 }
 
-.cta-card__image { position: absolute; right: 120px; bottom: 47px; width: 450px; z-index: 3; }
+.cta-card__image {
+    position: absolute;
+    right: 18px;
+    bottom: 51px;
+    width: 441px;
+    z-index: 3;
+}
 
 /* 4. Кнопки CTA (включая «Наверх ↑» и «Войдите…»)                         */
 .btn--cta,
@@ -231,7 +247,7 @@
     line-height: 1.4;
   }
 
-  /* === ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ — ТОЧНО ПО ВАШИМ ТРЕБОВАНИЯМ === */
+  /* === ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ === */
   .section-title {
     width: 343px;
     height: 26px;

@@ -1,7 +1,5 @@
-// src/components/Passing.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import Header from './Header';
 import '../styles/passing.css';
 import { getWorkoutById, getUserProgress, saveProgress } from '../api/fitness';
 import { useAuth } from '../context/AuthContext';
@@ -9,61 +7,49 @@ import { useAuth } from '../context/AuthContext';
 export default function Passing() {
   const { courseId, workoutId } = useParams<{ courseId: string; workoutId: string }>();
   const { user } = useAuth();
-  const [videoUrl, setVideoUrl] = useState('/videos/yoga-lesson-2.mp4');
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [workoutName, setWorkoutName] = useState('Тренировка');
   const [exercises, setExercises] = useState<string[][]>([['', '', ''], ['', '', ''], ['', '', '']]);
-  const [progress, setProgress] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const [progress, setProgress] = useState<number[]>(Array(9).fill(0));
   const [showModal, setShowModal] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    const video = document.querySelector('.video-player') as HTMLVideoElement;
-    const overlay = document.querySelector('.play-overlay') as HTMLElement;
-
-    const handlePlay = () => {
-      overlay.style.display = 'none';
-    };
-    const handleClickOverlay = () => {
-      video?.play();
-    };
-
-    video?.addEventListener('play', handlePlay);
-    overlay?.addEventListener('click', handleClickOverlay);
-
-      const loadWorkout = async () => {
+    const loadWorkout = async () => {
       if (!courseId || !workoutId) return;
+
       try {
-        const workout: any = await getWorkoutById(courseId, workoutId);
-        setVideoUrl(workout.video || '/videos/yoga-lesson-2.mp4');
+        const workout = await getWorkoutById(courseId, workoutId);
         setWorkoutName(workout.name || 'Тренировка');
 
-        const ex = workout.exercises?.map((e: any) => e.name) || [
+        const youtubeMatch = workout.video?.match(/embed\/([a-zA-Z0-9_-]+)/);
+        const youtubeId = youtubeMatch ? youtubeMatch[1] : null;
+        setVideoUrl(youtubeId);
+
+        const exNames = workout.exercises?.map((e: any) => e.name) || [
           'Наклоны вперед', 'Наклоны назад', 'Поднятие ног',
           'Наклоны вперед', 'Наклоны назад', 'Поднятие ног',
           'Наклоны вперед', 'Наклоны назад', 'Поднятие ног'
         ];
+
         const cols: string[][] = [[], [], []];
-        ex.forEach((name: string, i: number) => {
+        exNames.forEach((name: string, i: number) => {
           cols[i % 3].push(name);
         });
         setExercises(cols);
+        setProgress(Array(exNames.length).fill(0));
 
-       const userProgress: any[] = await getUserProgress(courseId);
+        const userProgress = await getUserProgress(courseId);
         const saved = userProgress.find((p: any) => p.workoutId === workoutId);
         if (saved?.progressData) {
           setProgress(saved.progressData);
         }
       } catch (err) {
-        console.warn('Не удалось загрузить тренировку, оставляем заглушку');
-        // Заглушки уже в useState — не меняем
+        console.warn('Не удалось загрузить тренировку:', err);
       }
     };
 
     loadWorkout();
-
-    return () => {
-      video?.removeEventListener('play', handlePlay);
-      overlay?.removeEventListener('click', handleClickOverlay);
-    };
   }, [courseId, workoutId]);
 
   const updateProgress = (index: number, value: number) => {
@@ -79,13 +65,16 @@ export default function Passing() {
       alert('Войдите в аккаунт');
       return;
     }
-    const allDone = progress.every(p => p === 100);
+    if (!courseId || !workoutId) return;
+
+    const allDone = progress.every(p => p > 0);
     if (!allDone) {
-      alert('Доведите все упражнения до 100%');
+      alert('Заполните прогресс по всем упражнениям');
       return;
     }
+
     try {
-      await saveProgress(courseId!, workoutId!, progress);
+      await saveProgress(courseId, workoutId, progress);
       setShowModal(true);
       setTimeout(() => setShowModal(false), 4000);
     } catch (err: any) {
@@ -100,19 +89,26 @@ export default function Passing() {
 
   return (
     <>
-      <Header />
       <main className="main">
         <div className="container">
           <h1 className="lesson-title">{workoutName}</h1>
+          
           <section className="video-section">
             <div className="video-wrapper">
-              <video controls className="video-player" key={videoUrl}>
-                <source src={videoUrl} type="video/mp4" />
-                Ваш браузер не поддерживает видео.
-              </video>
-              <div className="play-overlay">
-                <img src="/images/play.svg" alt="Play" className="play-icon" />
-              </div>
+              {videoUrl ? (
+                <iframe
+                  ref={iframeRef}
+                  className="youtube-player"
+                  src={`https://www.youtube.com/embed/${videoUrl}?enablejsapi=1`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="video-placeholder">
+                  Видео недоступно
+                </div>
+              )}
             </div>
           </section>
 
@@ -121,19 +117,19 @@ export default function Passing() {
             <div className="exercises-grid">
               {[0, 1, 2].map(col => (
                 <div key={col} className="exercise-column">
-                  {exercises[col].map((exercise, row) => {
+                  {exercises[col]?.map((exercise, row) => {
                     const index = col + row * 3;
                     const value = getProgressForIndex(col, row);
                     return (
                       <div key={index} className="exercise-item-wrapper">
                         <div className="exercise-item">
                           {exercise || 'Упражнение'}
-                          <span className="progress-value">{value}%</span>
+                          <span className="progress-value">{value}</span>
                         </div>
                         <div className="progress-bar">
                           <div
                             className="progress-fill"
-                            style={{ width: `${value}%` }}
+                            style={{ width: `${(value / 100) * 100}%` }}
                           />
                         </div>
                         <input
@@ -162,7 +158,7 @@ export default function Passing() {
           <div className="congrats-content">
             <img src="/images/congrats.svg" alt="Поздравляем" className="congrats-icon" />
             <h3>Молодец!</h3>
-            <p>Ты завершил(а) тренировку на 100%</p>
+            <p>Ты завершил(а) тренировку!</p>
           </div>
         </div>
       )}

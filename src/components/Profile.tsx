@@ -1,4 +1,3 @@
-// src/components/Profile.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -6,19 +5,19 @@ import '../styles/profile.css';
 import { deleteCourse, getAllCourses } from '../api/fitness';
 
 const bgColors: Record<string, string> = {
-  yoga: '#FFC700',
-  stretching: '#2491D2',
-  fitness: '#F7A012',
-  step: '#FF7E65',
-  bodyflex: '#7D458C',
+  ab1c3f: '#FFC700',
+  kfpq8e: '#2491D2',
+  ypox9r: '#F7A012',
+  '6i67sm': '#FF7E65',
+  q02a6i: '#7D458C',
 };
 
 const progressMap: Record<string, number> = {
-  yoga: 40,
-  stretching: 0,
-  fitness: 100,
-  step: 0,
-  bodyflex: 0,
+  ab1c3f: 40,
+  kfpq8e: 0,
+  ypox9r: 100,
+  '6i67sm': 0,
+  q02a6i: 0,
 };
 
 export default function Profile() {
@@ -35,21 +34,25 @@ export default function Profile() {
 
     const loadUserCourses = async () => {
       try {
-        // Получаем ВСЕ курсы
+        // 1. Получаем ВСЕ курсы
         const allCourses = await getAllCourses();
 
-        // Получаем курсы пользователя с сервера
+        // 2. Получаем данные пользователя
         const userResponse = await fetch('https://wedev-api.sky.pro/api/fitness/users/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const userData = await userResponse.json();
 
-        const userCourseIds = userData.courses || [];
+        // 3. БЕРЁМ selectedCourses, а не courses!
+        const userCourseIds = userData.selectedCourses || [];
 
-        // Фильтруем и добавляем прогресс
+        // 4. Находим курсы по ID
         const userCourses = allCourses
           .filter((c: any) => userCourseIds.includes(c._id))
-          .map((c: any) => ({ ...c, progress: progressMap[c._id] || 0 }));
+          .map((c: any) => ({
+            ...c,
+            progress: progressMap[c._id] || 0,
+          }));
 
         setCourses(userCourses);
       } catch (err) {
@@ -94,6 +97,7 @@ export default function Profile() {
     <main className="main">
       <div className="container">
         <h1 className="page-title">Профиль</h1>
+
         <section className="profile-card">
           <div className="profile-avatar">
             <img src="/images/avatar.svg" alt="Аватар" />
@@ -106,8 +110,10 @@ export default function Profile() {
             </button>
           </div>
         </section>
+
         <section className="my-courses">
           <h2 className="section-title">Мои курсы</h2>
+
           {loading ? (
             <div className="loading">Загрузка курсов...</div>
           ) : courses.length === 0 ? (
@@ -125,10 +131,7 @@ export default function Profile() {
                       style={{ backgroundColor: bgColors[course._id] || '#BCEC30' }}
                     >
                       <img
-                        src={
-                          course.image ||
-                          `/images/image_${course._id === 'step' ? '4' : course._id === 'bodyflex' ? '5' : '1'}.svg`
-                        }
+                        src={course.image || `/images/image_${course.order || 1}.svg`}
                         alt={course.nameRU}
                         className="card__image"
                       />
@@ -139,6 +142,7 @@ export default function Profile() {
                         <img src="/images/minus.svg" alt="Удалить" />
                       </button>
                     </div>
+
                     <div className="course-content">
                       <h3 className="course-title">{course.nameRU}</h3>
                       <div className="course-meta">

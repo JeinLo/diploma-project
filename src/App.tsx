@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Profile from './components/Profile';
 import Course from './components/Course';
 import { AuthProvider } from './context/AuthContext';
+import Passing from './components/Passing';
 import './index.css';
 
 export default function App() {
@@ -16,6 +17,8 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/course/:id" element={<Course />} />
           <Route path="*" element={<Home />} />
+          <Route path="/passing" element={<Passing />} /> 
+          {/* <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} /> */}
         </Routes>
       </div>
     </AuthProvider>

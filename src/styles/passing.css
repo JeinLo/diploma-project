@@ -6,40 +6,44 @@
   font-size: 60px;
   color: #000;
   margin-bottom: 40px;
+  text-align: center;
 }
 
-.video-section { margin-bottom: 60px; display: flex; justify-content: center; }
-
+/* === ВИДЕО === */
+.video-section { 
+  margin-bottom: 60px; 
+  display: flex; 
+  justify-content: center; 
+}
 .video-wrapper {
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   height: 639px;
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  position: relative;
 }
-
-.video-player { width: 100%; height: 100%; object-fit: cover; }
-
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.1);
+.youtube-player {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.video-placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: opacity 0.3s;
+  background: #f0f0f0;
+  color: #999;
+  font-size: 24px;
 }
 
-.play-icon {
-  width: 156px;
-  height: 156px;
-  opacity: 0.75;
-  pointer-events: none;
-}
-
+/* === УПРАЖНЕНИЯ === */
 .exercises-section {
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto 60px;
   padding: 40px;
   background: #fff;
@@ -49,73 +53,131 @@
   flex-direction: column;
   gap: 24px;
 }
-
-.exercises-title { font-size: 32px; font-weight: 400; color: #000; }
-
-.exercises-grid { display: flex; gap: 60px; flex: 1; }
-
-.exercise-column { flex: 1; display: flex; flex-direction: column; gap: 16px; }
-.exercise-item { font-size: 18px; color: #000; }
-
+.exercises-title { 
+  font-size: 32px; 
+  font-weight: 400; 
+  color: #000; 
+  text-align: center;
+}
+.exercises-grid { 
+  display: flex; 
+  gap: 60px; 
+  justify-content: center;
+}
+.exercise-column { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px; 
+  max-width: 320px;
+}
+.exercise-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.exercise-item { 
+  font-size: 18px; 
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.progress-value {
+  font-weight: 500;
+  color: #4A90E2;
+}
 .progress-bar {
-  width: 320px;
+  width: 100%;
   height: 6px;
   background: #F7F7F7;
   border-radius: 50px;
   overflow: hidden;
 }
-
 .progress-fill {
   height: 100%;
-  background: #E0E0E0;
+  background: #4A90E2;
   border-radius: 4px;
   transition: width 0.3s ease;
 }
+.progress-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none; 
+  appearance: none; 
+  background: transparent;
+  outline: none;
+}
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4A90E2;
+  cursor: pointer;
+}
 
+/* === КНОПКА === */
 .btn--cta {
   width: 320px;
   height: 52px;
-  margin: -15px 0 0 -10px;
+  margin: 20px auto 0;
+  display: block;
 }
 
-/* Адаптив */
+/* === МОДАЛКА === */
+.congrats-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.congrats-content {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+.congrats-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+/* === АДАПТИВ === */
 @media (max-width: 1200px) {
-  .video-wrapper, .exercises-section { width: 100%; max-width: 1160px; }
-}
-@media (max-width: 768px) {
-  .lesson-title { font-size: 42px; margin-bottom: 60px; }
-  .exercises-grid { flex-direction: column; }
-  .btn--cta { width: 100%; }
+  .video-wrapper { height: 500px; }
+  .exercises-section { padding: 30px; }
 }
 
-/* === МОБИЛЬНАЯ ВЕРСИЯ (до 768px) === */
 @media (max-width: 768px) {
-  .lesson-title {
-    font-size: 32px;
-    margin-bottom: 40px;
-    text-align: center;
+  .lesson-title { 
+    font-size: 32px; 
+    margin-bottom: 30px; 
   }
-  .video-wrapper {
-    height: 250px;
-    border-radius: 20px;
+  .video-wrapper { 
+    height: 250px; 
+    border-radius: 20px; 
   }
-  .exercises-section {
-    padding: 20px;
-    border-radius: 20px;
+  .exercises-section { 
+    padding: 20px; 
+    border-radius: 20px; 
   }
-  .exercises-grid {
-    flex-direction: column;
-    gap: 15px;
+  .exercises-grid { 
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: center;
   }
-  .exercise-item {
-    font-size: 16px;
+  .exercise-column {
+    max-width: 100%;
   }
-  .progress-bar {
-    height: 6px;
-  }
-  .btn--cta {
-    width: 100%;
-    max-width: 300px;
-    margin: 20px auto 0;
+  .btn--cta { 
+    width: 100%; 
+    max-width: 300px; 
   }
 }
