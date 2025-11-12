@@ -1,3 +1,4 @@
+// src/components/Passing/ExercisesSection.tsx
 interface ExercisesSectionProps {
   exercises: string[][];
   progress: number[];
@@ -5,12 +6,7 @@ interface ExercisesSectionProps {
   onComplete: () => void;
 }
 
-export function ExercisesSection({ exercises, progress, updateProgress, onComplete }: ExercisesSectionProps) {
-  const getProgressForIndex = (col: number, row: number) => {
-    const index = col + row * 3;
-    return progress[index] || 0;
-  };
-
+export function ExercisesSection({ exercises, progress }: ExercisesSectionProps) {
   return (
     <section className="exercises-section">
       <h2 className="exercises-title">Упражнения</h2>
@@ -19,7 +15,7 @@ export function ExercisesSection({ exercises, progress, updateProgress, onComple
           <div key={col} className="exercise-column">
             {exercises[col]?.map((exercise, row) => {
               const index = col + row * 3;
-              const value = getProgressForIndex(col, row);
+              const value = progress[index] || 0;
               return (
                 <div key={index} className="exercise-item-wrapper">
                   <div className="exercise-item">
@@ -32,23 +28,12 @@ export function ExercisesSection({ exercises, progress, updateProgress, onComple
                       style={{ width: `${value}%` }}
                     />
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={value}
-                    onChange={(e) => updateProgress(index, Number(e.target.value))}
-                    className="progress-slider"
-                  />
                 </div>
               );
             })}
           </div>
         ))}
       </div>
-      <button className="btn btn--cta" onClick={onComplete}>
-        Завершить тренировку
-      </button>
     </section>
   );
 }

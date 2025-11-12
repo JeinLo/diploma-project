@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as apiLogin } from '../api/auth/login';
 import { register as apiRegister } from '../api/auth/register';
-import { getUser } from '../api/users';
+import { getUser } from '../api/users/index';
 import type { User } from '../api/types';
 
 interface AuthContextType {

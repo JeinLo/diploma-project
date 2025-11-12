@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getAllCourses } from '../../api/courses';
-import { getUser } from '../../api/users';
-import { deleteCourse } from '../../api/users';
+import { getAllCourses } from '../../api/courses/index';
+import { getUser } from '../../api/users/index';
+import { deleteCourse } from '../../api/users/index';
 import type { CourseWithProgress } from '../../api/types';
 
 const progressMap: Record<string, number> = {

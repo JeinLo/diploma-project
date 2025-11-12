@@ -23,8 +23,8 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/course/:id" element={<Course />} />
             {/* добавить еще роут курс/воркаут */}
-            {/* <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} /> */}
-            <Route path="/passing" element={<Passing />} />
+            {/* <Route path="/passing/:workoutId" element={<Passing />} /> */}
+            <Route path="/course/:courseId/workout/:workoutId" element={<Passing />} />
           </Route>
         </Routes>
       </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { addCourse } from '../../api/users';
+import { addCourse } from '../../api/users/index';
 import AuthModal from '../AuthModal';
 
 interface CtaSectionProps {

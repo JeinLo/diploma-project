@@ -1,4 +1,4 @@
-/* src/styles/passing.css — ТОЛЬКО ДЛЯ Passing.tsx */
+/* src/styles/passing.css — УПРОЩЁННЫЙ */
 .main { padding: 40px 0; }
 
 .lesson-title {
@@ -22,22 +22,11 @@
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  position: relative;
 }
 .youtube-player {
   width: 100%;
   height: 100%;
   border: none;
-}
-.video-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0;
-  color: #999;
-  font-size: 24px;
 }
 
 /* === УПРАЖНЕНИЯ === */
@@ -100,22 +89,6 @@
   border-radius: 4px;
   transition: width 0.3s ease;
 }
-.progress-slider {
-  width: 100%;
-  height: 6px;
-  -webkit-appearance: none; 
-  appearance: none; 
-  background: transparent;
-  outline: none;
-}
-.progress-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #4A90E2;
-  cursor: pointer;
-}
 
 /* === КНОПКА === */
 .btn--cta {
@@ -123,30 +96,75 @@
   height: 52px;
   margin: 20px auto 0;
   display: block;
+  background: #A8E6A1;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
 }
+.btn--cta:hover { background: #96d68e; }
 
-/* === МОДАЛКА === */
-.congrats-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.congrats-content {
+/* === ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ МОДАЛКИ УСПЕХА === */
+.congrats-modal-content {
   background: white;
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 30px;
   text-align: center;
-  max-width: 400px;
-  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 .congrats-icon {
   width: 80px;
   height: 80px;
-  margin-bottom: 20px;
+}
+
+/* === МОДАЛКА УСПЕХА === */
+.congrats-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.congrats-content {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.congrats-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.congrats-content h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.congrats-content p {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
 }
 
 /* === АДАПТИВ === */
@@ -154,30 +172,11 @@
   .video-wrapper { height: 500px; }
   .exercises-section { padding: 30px; }
 }
-
 @media (max-width: 768px) {
-  .lesson-title { 
-    font-size: 32px; 
-    margin-bottom: 30px; 
-  }
-  .video-wrapper { 
-    height: 250px; 
-    border-radius: 20px; 
-  }
-  .exercises-section { 
-    padding: 20px; 
-    border-radius: 20px; 
-  }
-  .exercises-grid { 
-    flex-direction: column; 
-    gap: 15px; 
-    align-items: center;
-  }
-  .exercise-column {
-    max-width: 100%;
-  }
-  .btn--cta { 
-    width: 100%; 
-    max-width: 300px; 
-  }
+  .lesson-title { font-size: 32px; margin-bottom: 30px; }
+  .video-wrapper { height: 250px; border-radius: 20px; }
+  .exercises-section { padding: 20px; border-radius: 20px; }
+  .exercises-grid { flex-direction: column; gap: 15px; align-items: center; }
+  .exercise-column { max-width: 100%; }
+  .btn--cta { width: 100%; max-width: 300px; }
 }

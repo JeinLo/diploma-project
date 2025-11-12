@@ -1,6 +1,6 @@
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { addCourse } from '../../api/users';
+import { addCourse } from '../../api/users/index';
 import AuthModal from '../AuthModal';
 import { useState } from 'react';
 import type { Course } from '../../api/types';
@@ -21,18 +21,13 @@ export function CourseCardList({ courses }: CourseCardListProps) {
       return;
     }
     try {
-      // 1. Добавляем курс в профиль
       await addCourse(courseId);
       alert('Курс добавлен в профиль!');
 
-      // 2. Находим курс и первую тренировку
       const course = courses.find(c => c._id === courseId);
       const firstWorkoutId = course?.workouts?.[0] || '1';
 
-      // 3. Переходим на страницу тренировки без параметров в URL
-      navigate('/passing', {
-        state: { courseId, workoutId: firstWorkoutId }
-      });
+      navigate(`/course/${courseId}/workout/${firstWorkoutId}`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Ошибка';
       alert('Ошибка: ' + message);
