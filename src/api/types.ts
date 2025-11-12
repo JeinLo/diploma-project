@@ -35,11 +35,11 @@ export interface Workout {
   _id: string;
   name: string;
   video: string;
-  exercises: {
-    _id: string;
+  exercises: Array<{
     name: string;
     quantity: number;
-  }[];
+    _id: string;
+  }>;
 }
 
 export interface CourseProgress {

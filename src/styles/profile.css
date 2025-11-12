@@ -207,6 +207,7 @@
   text-align: center;
   text-decoration: none;
   display: block;
+  border: 1px solid #BCEC30;
 }
 
 .course-btn:hover {

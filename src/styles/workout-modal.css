@@ -1,0 +1,157 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  width: 460px;
+  height: 609px;
+  background: #fff;
+  border-radius: 30px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #999;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workout-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.workout-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.workout-item:hover {
+  opacity: 0.8;
+}
+
+.workout-item.done {
+  opacity: 0.6;
+}
+
+.workout-check {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workout-circle {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  border-radius: 50%;
+}
+
+.workout-check img {
+  width: 20px;
+  height: 20px;
+}
+
+.workout-info {
+  flex: 1;
+}
+
+.workout-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.workout-desc {
+  font-size: 14px;
+  color: #777;
+}
+
+.modal-btn {
+  background: #BCEC30;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  padding: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.modal-btn:hover {
+  background: #a8d926;
+}
+
+.modal-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  color: #777;
+  font-size: 16px;
+  padding: 20px 0;
+}
+
+/* Адаптив (если нужно) */
+@media (max-width: 500px) {
+  .modal {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    min-height: 500px;
+    padding: 30px;
+    gap: 32px;
+  }
+}

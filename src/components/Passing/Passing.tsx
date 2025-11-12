@@ -1,12 +1,11 @@
-import { useAuth } from '../../context/AuthContext';
 import { usePassingWorkout } from './usePassingWorkout';
 import { VideoPlayer } from './VideoPlayer';
 import { ExercisesSection } from './ExercisesSection';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/passing.css';
 
 export default function Passing() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
   const {
     workout,
     progress,
@@ -16,14 +15,6 @@ export default function Passing() {
     handleComplete,
     showModal,
   } = usePassingWorkout();
-
-  // Защита: если пользователь не авторизован — уйдём на главную
-  useEffect(() => {
-    if (!user) {
-      alert('Войдите в аккаунт');
-      window.location.href = '/';
-    }
-  }, [user]);
 
   if (loading) {
     return (
@@ -55,28 +46,40 @@ export default function Passing() {
     );
   }
 
-  // Делим упражнения на 3 колонки
   const exercisesByColumn = [[], [], []] as string[][];
   workout.exercises.forEach((ex, i) => {
     exercisesByColumn[i % 3].push(ex.name);
   });
 
-  const videoId = workout.video?.match(/embed\/([a-zA-Z0-9_-]+)/)?.[1] || null;
+  const videoId = workout.video?.match(/embed\/([a-zA-Z0-9*-]+)/)?.[1] || null;
+
+  // После завершения — редирект в профиль
+  const handleCompleteAndRedirect = async () => {
+    await handleComplete();
+    setTimeout(() => {
+      navigate('/profile');
+    }, 3000);
+  };
 
   return (
     <>
       <main className="main">
         <div className="container">
           <h1 className="lesson-title">{workout.name}</h1>
-          <VideoPlayer videoUrl={videoId} />
+          <div className="video-section">
+            <div className="video-wrapper">
+              <VideoPlayer videoUrl={videoId} />
+            </div>
+          </div>
           <ExercisesSection
             exercises={exercisesByColumn}
             progress={progress}
             updateProgress={updateProgress}
-            onComplete={handleComplete}
+            onComplete={handleCompleteAndRedirect}
           />
         </div>
       </main>
+
       {showModal && (
         <div className="congrats-modal">
           <div className="congrats-content">

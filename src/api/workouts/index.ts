@@ -1,5 +1,11 @@
+// src/api/workouts/index.ts
 import { apiRequest } from '../client';
-import type { Workout, ProgressData } from '../types';
+import type { Workout } from '../types';
+
+// GET /api/fitness/courses/[courseId]/workouts
+export async function getCourseWorkouts(courseId: string): Promise<Workout[]> {
+  return apiRequest<Workout[]>(`/courses/${courseId}/workouts`);
+}
 
 // GET /api/fitness/workouts/[workoutId]
 export async function getWorkoutById(workoutId: string): Promise<Workout> {
@@ -11,8 +17,8 @@ export async function saveWorkoutProgress(
   courseId: string,
   workoutId: string,
   progressData: number[]
-): Promise<ProgressData> {
-  return apiRequest<ProgressData>(`/courses/${courseId}/workouts/${workoutId}`, {
+): Promise<{ message: string }> {
+  return apiRequest<{ message: string }>(`/courses/${courseId}/workouts/${workoutId}`, {
     method: 'PATCH',
     body: JSON.stringify({ progressData }),
   });

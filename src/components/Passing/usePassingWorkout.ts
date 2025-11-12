@@ -40,7 +40,10 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
         setProgress(initial);
 
         const savedProgress = await getCourseProgress(courseId);
+       debugger
+       
         const current = savedProgress.workoutsProgress.find(
+   
           (wp: WorkoutProgress) => wp.workoutId === workoutId
         );
         if (current) {
