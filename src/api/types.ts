@@ -31,15 +31,17 @@ export interface ProgressData {
   progressData: number[];
 }
 
+export interface Exercise {
+  _id: string;
+  name: string;
+  quantity: number;
+}
+
 export interface Workout {
   _id: string;
   name: string;
   video: string;
-  exercises: Array<{
-    name: string;
-    quantity: number;
-    _id: string;
-  }>;
+  exercises: Exercise[];
 }
 
 export interface CourseProgress {

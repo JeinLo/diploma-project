@@ -1,3 +1,4 @@
+// src/components/Home/Home.tsx
 import { useHomeData } from './useHomeData';
 import { CourseCardList } from './CourseCardList';
 

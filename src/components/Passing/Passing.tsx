@@ -5,7 +5,6 @@ import { VideoPlayer } from './VideoPlayer';
 import { ExercisesSection } from './ExercisesSection';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/passing.css';
-import '../../styles/workout-modal.css';
 
 export default function Passing() {
   const navigate = useNavigate();
@@ -16,55 +15,44 @@ export default function Passing() {
     error,
     updateProgress,
     handleComplete,
-    showModal,
-    setShowModal,
+    showSuccessModal,
+    setShowSuccessModal,
   } = usePassingWorkout();
 
   const [showProgressModal, setShowProgressModal] = useState(false);
-  const [tempProgress, setTempProgress] = useState<number[]>([]);
-
-  const openProgressModal = () => {
-    setTempProgress([...progress]);
-    setShowProgressModal(true);
-  };
-
-  const saveTempProgress = () => {
-    tempProgress.forEach((value, index) => updateProgress(index, value));
-    setShowProgressModal(false);
-  };
-
-  const allFilled = progress.length > 0 && progress.every(p => p > 0);
-  const hasAnyProgress = progress.some(p => p > 0);
-
-  const buttonText = allFilled
-    ? 'Завершить тренировку'
-    : hasAnyProgress
-      ? 'Обновить свой прогресс'
-      : 'Заполнить свой прогресс';
-
-  const handleMainButton = async () => {
-    if (allFilled) {
-      await handleComplete(); // Внутри handleComplete — setShowModal(true)
-    } else {
-      openProgressModal();
-    }
-  };
-
-  const handleCongratsClose = () => {
-    setShowModal(false);
-    navigate('/profile');
-  };
+  const [tempProgress, setTempProgress] = useState<number[]>([...progress]);
 
   if (loading) return <div className="loading">Загрузка...</div>;
   if (error || !workout) return <div className="error-banner">Ошибка</div>;
 
   const exercisesByColumn = [[], [], []] as string[][];
   workout.exercises.forEach((ex, i) => {
-    const displayName = `${ex.name} (${ex.quantity} повторений)`;
-    exercisesByColumn[i % 3].push(displayName);
+    exercisesByColumn[i % 3].push(ex.name);
   });
 
-  const videoUrl = 'https://www.youtube.com/embed/gJPs7b8SpVw';
+  const allMetNorm = progress.every((p, i) => p >= (workout.exercises[i]?.quantity || 1));
+
+  const handleFillProgress = () => {
+    setTempProgress([...progress]);
+    setShowProgressModal(true);
+  };
+
+  const handleCompleteTraining = async () => {
+    if (!allMetNorm) {
+      alert('Выполните все упражнения по нормативу');
+      return;
+    }
+    await handleComplete();
+    navigate('/profile');
+  };
+
+  const saveTempProgress = async () => {
+    tempProgress.forEach((value, index) => updateProgress(index, value));
+    setShowProgressModal(false);
+    await handleComplete();
+    setShowSuccessModal(true);
+    setTimeout(() => setShowSuccessModal(false), 3000);
+  };
 
   return (
     <>
@@ -73,44 +61,49 @@ export default function Passing() {
           <h1 className="lesson-title">{workout.name}</h1>
 
           <div className="video-section">
-            <div className="video-wrapper">
-              <VideoPlayer videoUrl={videoUrl} />
-            </div>
+            <VideoPlayer videoUrl={workout.video} />
           </div>
 
           <ExercisesSection
             exercises={exercisesByColumn}
             progress={progress}
             updateProgress={updateProgress}
-            onComplete={() => {}}
           />
 
-          <button className="btn btn--cta" onClick={handleMainButton}>
-            {buttonText}
-          </button>
+          <div className="exercise-buttons">
+            <button className="btn btn--cta" onClick={handleFillProgress}>
+              Заполнить результат
+            </button>
+            <button
+              className="btn btn--cta"
+              onClick={handleCompleteTraining}
+              disabled={!allMetNorm}
+            >
+              Завершить тренировку
+            </button>
+          </div>
         </div>
       </main>
 
-      {/* === ВОССТАНОВЛЕНА МОДАЛКА УСПЕХА === */}
-      {showModal && (
-        <div className="congrats-modal" onClick={handleCongratsClose}>
-          <div className="congrats-content" onClick={e => e.stopPropagation()}>
-            <img src="/images/congrats.svg" alt="Успех" className="congrats-icon" />
-            <h3>Молодец!</h3>
-            <p>Ты завершил(а) тренировку!</p>
+      {/* === Модалка успеха === */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
+          <div className="success-modal-content" onClick={e => e.stopPropagation()}>
+            <h3 className="success-title">Ваш прогресс засчитан!</h3>
+            <img src="/images/mini-galka.svg" alt="Успех" className="success-icon" />
           </div>
         </div>
       )}
 
-      {/* === МОДАЛКА ПРОГРЕССА === */}
+      {/* === Модалка ввода прогресса === */}
       {showProgressModal && (
         <div className="modal-overlay" onClick={() => setShowProgressModal(false)}>
-          <div className="modal progress-modal-custom" onClick={e => e.stopPropagation()}>
-            <h3 className="modal-title-custom">Ваш прогресс</h3>
-            <div className="progress-form-custom">
+          <div className="progress-modal" onClick={e => e.stopPropagation()}>
+            <h3 className="progress-modal-title">Ваш прогресс</h3>
+            <div className="progress-form">
               {workout.exercises.map((ex, i) => (
-                <div key={i} className="progress-input-group-custom">
-                  <label className="progress-label-custom">
+                <div key={i} className="progress-input-group">
+                  <label>
                     Сколько раз вы сделали <strong>{ex.name}</strong>?
                   </label>
                   <input
@@ -123,12 +116,11 @@ export default function Passing() {
                       newTemp[i] = val;
                       setTempProgress(newTemp);
                     }}
-                    className="progress-input-custom"
                   />
                 </div>
               ))}
             </div>
-            <button className="modal-btn" onClick={saveTempProgress}>
+            <button className="btn btn--cta" onClick={saveTempProgress}>
               Сохранить
             </button>
           </div>

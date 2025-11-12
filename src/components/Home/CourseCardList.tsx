@@ -1,3 +1,4 @@
+// src/components/Home/CourseCardList.tsx
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { addCourse } from '../../api/users/index';
@@ -10,9 +11,11 @@ interface CourseCardListProps {
 }
 
 export function CourseCardList({ courses }: CourseCardListProps) {
-  const { token } = useAuth();
+  const { token, user } = useAuth(); 
   const navigate = useNavigate();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  const addedCourseIds = new Set(user?.selectedCourses || []);
 
   const handlePlusClick = async (e: React.MouseEvent, courseId: string) => {
     e.stopPropagation();
@@ -27,7 +30,9 @@ export function CourseCardList({ courses }: CourseCardListProps) {
       const course = courses.find(c => c._id === courseId);
       const firstWorkoutId = course?.workouts?.[0] || '1';
 
-      navigate(`/course/${courseId}/workout/${firstWorkoutId}`);
+      navigate('/passing', {
+        state: { courseId, workoutId: firstWorkoutId }
+      });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Ошибка';
       alert('Ошибка: ' + message);
@@ -43,6 +48,8 @@ export function CourseCardList({ courses }: CourseCardListProps) {
       <div className="cards">
         {courses.map((course) => {
           const imageSrc = course.image || `/images/image_${course.order || 1}.svg`;
+          const isAdded = addedCourseIds.has(course._id);
+
           return (
             <article
               key={course._id}
@@ -55,7 +62,12 @@ export function CourseCardList({ courses }: CourseCardListProps) {
                   className="card__play-btn"
                   onClick={(e) => handlePlusClick(e, course._id)}
                 >
-                  <img src="/images/plus.svg" alt="Начать" className="plus-icon" />
+                  {/* Меняем иконку */}
+                  <img
+                    src={isAdded ? "/images/minus.svg" : "/images/plus.svg"}
+                    alt={isAdded ? "Удалить" : "Начать"}
+                    className="plus-icon"
+                  />
                 </button>
               </div>
               <div className="card__content">

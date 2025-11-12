@@ -1,3 +1,4 @@
+// src/components/Home/useHomeData.ts
 import { useState, useEffect } from 'react';
 import { getAllCourses } from '../../api/courses';
 import type { Course } from '../../api/types';

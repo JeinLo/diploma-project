@@ -5,6 +5,8 @@ import { getWorkoutById, saveWorkoutProgress } from '../../api/workouts';
 import { getCourseProgress } from '../../api/users/index';
 import type { Workout, WorkoutProgress } from '../../api/types';
 
+const FALLBACK_VIDEO = 'https://www.youtube.com/embed/gJPs7b8SpVw';
+
 interface UsePassingWorkoutResult {
   workout: Workout | null;
   progress: number[];
@@ -12,8 +14,8 @@ interface UsePassingWorkoutResult {
   error: string | null;
   updateProgress: (index: number, value: number) => void;
   handleComplete: () => Promise<void>;
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
+  showSuccessModal: boolean;
+  setShowSuccessModal: (show: boolean) => void;
 }
 
 export function usePassingWorkout(): UsePassingWorkoutResult {
@@ -22,7 +24,7 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
   const [progress, setProgress] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (!courseId || !workoutId) {
@@ -34,21 +36,25 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
     const loadWorkoutAndProgress = async () => {
       try {
         let workoutData = await getWorkoutById(workoutId);
-        setWorkout(workoutData);
 
-        // ФАЛЛБЭК: если упражнений нет — добавляем из фото (Степ-аэробика)
+        // Fallback: если нет упражнений
         if (!workoutData.exercises || workoutData.exercises.length === 0) {
           workoutData = {
             ...workoutData,
             exercises: [
               { _id: '1', name: 'Наклон вперед', quantity: 10 },
               { _id: '2', name: 'Наклон назад', quantity: 10 },
-              { _id: '3', name: 'Поднятие ног, согнутых в коленях', quantity: 5 },
+              { _id: '3', name: 'Поднятие ног', quantity: 5 },
             ],
           };
-          setWorkout(workoutData);
         }
 
+        // Fallback: если нет видео
+        if (!workoutData.video) {
+          workoutData = { ...workoutData, video: FALLBACK_VIDEO };
+        }
+
+        setWorkout(workoutData);
         const initial = Array(workoutData.exercises.length).fill(0);
         setProgress(initial);
 
@@ -64,15 +70,15 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
         }
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Ошибка');
-        // ФАЛЛБЭК ПРИ ОШИБКЕ API
+
         const fallbackWorkout: Workout = {
           _id: workoutId,
           name: 'Степ-аэробика',
-          video: 'https://www.youtube.com/embed/gJPs7b8SpVw',
+          video: FALLBACK_VIDEO,
           exercises: [
             { _id: '1', name: 'Наклон вперед', quantity: 10 },
             { _id: '2', name: 'Наклон назад', quantity: 10 },
-            { _id: '3', name: 'Поднятие ног, согнутых в коленях', quantity: 5 },
+            { _id: '3', name: 'Поднятие ног', quantity: 5 },
           ],
         };
         setWorkout(fallbackWorkout);
@@ -93,22 +99,15 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
     });
   };
 
-   const handleComplete = async () => {
-  if (!courseId || !workoutId || !workout) return;
+  const handleComplete = async () => {
+    if (!courseId || !workoutId || !workout) return;
 
-  const allDone = progress.every((p) => p > 0);
-  if (!allDone) {
-    alert('Заполните прогресс по всем упражнениям');
-    return;
-  }
-
-  try {
-    await saveWorkoutProgress(courseId, workoutId, progress);
-    setShowModal(true);
-  } catch (err: unknown) {
-    alert(err instanceof Error ? err.message : 'Ошибка');
-  }
-};
+    try {
+      await saveWorkoutProgress(courseId, workoutId, progress);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Не удалось сохранить');
+    }
+  };
 
   return {
     workout,
@@ -117,7 +116,7 @@ export function usePassingWorkout(): UsePassingWorkoutResult {
     error,
     updateProgress,
     handleComplete,
-    showModal,
-    setShowModal,
+    showSuccessModal,
+    setShowSuccessModal,
   };
 }
