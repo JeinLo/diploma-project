@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# Онлайн-платформа для фитнес-тренировок
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Дипломный проект по созданию веб-приложения для занятий фитнесом дома. Пользователи могут выбирать курсы, проходить тренировки, отслеживать прогресс и смотреть видеоуроки.
 
-Currently, two official plugins are available:
+## 🚀 Основные возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✅ Авторизация (вход/регистрация)
+- 🏠 Главная страница с каталогом курсов
+- 👤 Профиль с прогрессом по курсам
+- 🎥 Видеоуроки (YouTube)
+- 📝 Заполнение результатов упражнений
+- 📊 Автоматический подсчёт прогресса
+- 📱 Полная мобильная адаптация
 
-## React Compiler
+## 🛠️ Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 18, TypeScript, React Router v6
+- **Сборка**: Vite
+- **Стили**: Чистый CSS (без Bootstrap/Tailwind)
+- **API**: REST (https://wedev-api.sky.pro/api/fitness)
+- **Типизация**: TypeScript строгая (`"verbatimModuleSyntax": true`)
+- **Тестирование**: Jest + React Testing Library
 
-## Expanding the ESLint configuration
+## 📦 Установка и запуск
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Требования
+- Node.js ≥ 18.x
+- npm или yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Шаги
+1. Клонируйте репозиторий:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+   git clone <ваш-репозиторий>
+   cd diploma-project
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. Установите зависимости:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+      npm install
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3. Запустите dev-сервер:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+      npm run devэ
+      
+4. Откройте в браузере: http://localhost:5173
+
+### 📁 Структура проекта
+
+src/
+├── api/                # Запросы к API
+├── components/         # Компоненты
+│   ├── Home/           # Главная
+│   ├── Profile/        # Профиль
+│   ├── Course/         # Страница курса
+│   ├── Passing/        # Тренировка
+│   └── ...
+├── context/            # Контекст авторизации
+├── styles/             # Глобальные стили
+├── types/              # TypeScript-типы
+└── App.tsx             # Корневой компонент
+
+### 🧪 Тестирование
+
+  1. Запуск всех тестов:
+
+        npm test
+
+  2. Запуск в режиме наблюдения:
+
+      npm run test:watch
+
+### 🌐 API
+
+  Эндпоинты:
+
+  - **GET /api/fitness/courses** — все курсы
+  - **POST /api/fitness/users/me/courses** — добавить курс
+  - **GET /api/fitness/users/me/progress?courseId=...** — прогресс
+  - **PATCH /api/fitness/courses/:id/workouts/:id** — сохранить результат
+  - Базовый URL: **https://wedev-api.sky.pro/api/fitness**
