@@ -1,0 +1,364 @@
+/* src/styles/profile.css — ТОЛЬКО ДЛЯ Profile.tsx */
+.main { padding: 40px 0; }
+
+.page-title, .section-title {
+  font-weight: 600;
+  font-size: 40px;
+  color: #000;
+  margin-bottom: 32px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 67px -12px #00000021;
+  margin-bottom: 48px;
+  width: 1200px;
+  max-width: 100%;
+  height: 257px;
+}
+
+.profile-avatar {
+  width: 197px;
+  height: 197px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.profile-info { flex: 1; }
+
+.profile-name {
+  font-weight: 500;
+  font-size: 32px;
+  color: #000;
+  margin: 0 0 30px 33px;
+}
+
+.profile-login {
+  font-size: 18px;
+  color: #000;
+  margin: 0 0 30px 33px;
+}
+
+.btn-logout {
+  background: white;
+  color: #000;
+  border: 1px solid #000;
+  width: 206px;
+  height: 52px;
+  padding: 16px 26px;
+  font-size: 18px;
+  border-radius: 46px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 0 30px 33px;
+}
+
+.btn-logout:hover {
+  background: #000;
+  color: #fff;
+}
+
+.my-courses { margin-bottom: 60px; }
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.course-card {
+  background: white;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  width: 360px;
+  height: 501px;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+}
+
+.course-card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12); 
+}
+
+.course-image-wrapper { 
+  position: relative; 
+  height: 325px; 
+  overflow: hidden; 
+}
+
+.card__image { 
+  width: 360px; 
+  height: 325px; 
+  object-fit: contain; 
+  border-radius: 30px; 
+}
+
+.card__play-btn {
+  position: absolute;
+  top: 20px; 
+  right: 20px;
+  width: 26.67px; 
+  height: 26.67px;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.card__play-btn img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+}
+
+.course-content { 
+  padding: 20px; 
+  flex-grow: 1; 
+  justify-content: flex-end; 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.course-title { 
+  font-size: 32px; 
+  font-weight: 500; 
+  margin-bottom: 12px; 
+  color: #222; 
+}
+
+.course-meta { 
+  display: flex; 
+  gap: 12px; 
+  margin-bottom: 12px; 
+  font-size: 16px; 
+  color: #666; 
+}
+
+.course-meta-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  color: #000; 
+}
+
+.course-meta-item img { 
+  width: 16px; 
+  height: 16px; 
+}
+
+.course-link { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  color: #000; 
+  margin-bottom: 12px; 
+}
+
+.course-link img { 
+  width: 16px; 
+  height: 16px; 
+}
+
+/* === ПРОГРЕСС-БАР И КНОПКА В КАРТОЧКЕ КУРСА === */
+.course-progress { 
+  margin: 10px 0 40px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.progress-text { 
+  font-size: 18px; 
+  color: #000; 
+}
+
+.progress-bar { 
+  height: 8px; 
+  background: #E0E0E0; 
+  border-radius: 4px; 
+  overflow: hidden; 
+}
+
+.progress-fill { 
+  height: 100%; 
+  background: #4A90E2; 
+  border-radius: 4px; 
+  transition: width 0.3s ease; 
+}
+
+.course-btn {
+  background: #BCEC30;
+  color: #000;
+  padding: 12px;
+  border-radius: 46px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: auto;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  border: 1px solid #BCEC30;
+}
+
+.course-btn:hover {
+  background: #a8d62a;
+  transform: translateY(-2px);
+}
+
+/* === УДАЛЕНИЕ — КНОПКА МИНУС === */
+.course-delete img {
+  filter: brightness(0) invert(1);
+}
+
+.courses-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+}
+
+/* === АДАПТИВ (до 868px) === */
+@media (max-width: 868px) {
+  /* === ЗАГОЛОВОК СТРАНИЦЫ === */
+  .page-title {
+    width: 343px !important;
+    height: 26px !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    margin-bottom: 32px !important;
+  }
+
+  /* === КАРТОЧКА ПРОФИЛЯ === */
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    padding: 20px;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    text-align: left;
+  }
+
+  .profile-avatar {
+    width: 141px !important;
+    height: 141px !important;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .profile-name {
+    width: 283px !important;
+    height: 26px !important;
+    font-weight: 500 !important;
+    font-size: 24px !important;
+    margin: 0 !important;
+  }
+
+  .profile-login {
+    width: 283px !important;
+    height: 18px !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    margin: 0 !important;
+    color: #000;
+  }
+
+  .btn-logout {
+    width: 283px !important;
+    height: 50px !important;
+    gap: 10px !important;
+    border-radius: 46px !important;
+    font-size: 16px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* === ЗАГОЛОВОК СЕКЦИИ "МОИ КУРСЫ" === */
+  .section-title {
+    width: 343px !important;
+    height: 26px !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    margin-bottom: 32px !important;
+  }
+
+  /* === СЕТКА КУРСОВ === */
+  .courses-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* === КАРТОЧКИ КУРСОВ === */
+  .course-card {
+    width: 343px !important;
+    height: 492px !important;
+    border-radius: 30px !important;
+    padding-bottom: 15px !important;
+    margin: 0 auto;
+  }
+
+  .course-image-wrapper {
+    height: 325px !important;
+    overflow: hidden;
+    border-radius: 30px 30px 0 0;
+  }
+
+  .card__image {
+    width: auto !important;
+    height: 100% !important;
+    max-width: 100%;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+
+  .course-title {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    margin-bottom: 12px;
+  }
+
+  .course-meta,
+  .course-link {
+    font-size: 14px !important;
+    gap: 8px !important;
+  }
+
+  .course-meta-item {
+    height: 32px !important;
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    background: #F7F7F7;
+    border-radius: 50px;
+  }
+
+  .course-progress {
+    margin: 10px 0 20px !important;
+  }
+
+  .progress-text {
+    font-size: 16px !important;
+  }
+
+  .course-btn {
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+}

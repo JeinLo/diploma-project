@@ -1,0 +1,136 @@
+/* src/styles/auth-modal.css — ФИНАЛЬНАЯ ВЕРСИЯ */
+.auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-modal {
+  background: transparent;
+  width: 90%;
+  max-width: 420px;
+  animation: scaleIn 0.4s ease-out;
+}
+
+.auth-modal__logo-center {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-modal__logo-center .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-modal__logo-center .logo__img {
+  width: 36px;
+  height: 36px;
+}
+
+.auth-modal__logo-center .logo__text {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #000;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 32px;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.auth-form__group {
+  width: 280px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* отступ для ошибки */
+}
+
+.auth-input {
+  width: 100%;
+  height: 52px;
+  padding: 16px 18px;
+  border: 1px solid #D0CECE;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  transition: all 0.2s;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #BCEC30;
+  box-shadow: 0 0 0 3px rgba(188, 236, 48, 0.2);
+}
+
+.auth-input.error {
+  border-color: #FF4B4B;
+  background: #FFFBFC;
+}
+
+/* ОШИБКА — ПОД КАЖДЫМ ПОЛЕМ */
+.auth-error {
+  color: #FF4B4B;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  min-height: 20px;
+  word-wrap: break-word;
+  padding: 0 4px;
+}
+
+.btn--auth-submit,
+.btn--auth-secondary {
+  width: 280px;
+  height: 52px;
+  border-radius: 46px;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn--auth-submit {
+  background: #BCEC30;
+  color: #000;
+  border: none;
+}
+
+.btn--auth-submit:hover:not(:disabled) {
+  background: #A8D62A;
+  transform: translateY(-2px);
+}
+
+/* ЧЁРНАЯ ОБВОДКА — КАК ТЫ ХОТЕЛ */
+.btn--auth-secondary {
+  background: transparent;
+  color: #000;
+  border: 1px solid #000 !important;
+}
+
+.btn--auth-secondary:hover {
+  background: #000;
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
