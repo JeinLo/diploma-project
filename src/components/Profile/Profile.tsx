@@ -1,4 +1,4 @@
-
+// src/components/Profile/Profile.tsx
 import { useAuth } from '../../context/AuthContext';
 import { useProfileData } from './useProfileData';
 import { UserCourseCard } from './UserCourseCard';
@@ -7,7 +7,7 @@ import '../../styles/profile.css';
 
 export default function Profile() {
   const { logout } = useAuth();
-  const { user, courses, loading, handleDelete, getButtonText } = useProfileData();
+  const { user, courses, loading, handleDelete, getButtonText, refetchCourses } = useProfileData();
 
   if (!user) {
     return (
@@ -51,6 +51,7 @@ export default function Profile() {
                   course={course}
                   onDelete={handleDelete}
                   getButtonText={getButtonText}
+                  onRefetch={refetchCourses} 
                 />
               ))}
             </div>

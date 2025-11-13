@@ -127,12 +127,67 @@ button {
 
 /* === МОБИЛЬНАЯ АДАПТАЦИЯ — ГЛОБАЛЬНО === */
 @media (max-width: 868px) {
-  /* Скрываем теглайн в хедере на всех страницах */
-  .header__tagline {
+  /* Скрываем теглайн и bubble в хедере на главной */
+  .header__tagline,
+  .bubble-wrapper {
     display: none !important;
   }
 
-  /* Единый стиль кнопок на всех страницах */
+  /* Заголовок главной страницы */
+  .hero__title {
+    width: 327px !important;
+    height: 105px !important;
+    font-weight: 500 !important;
+    font-size: 32px !important;
+    line-height: 110% !important;
+  }
+
+  /* Кнопка "Наверх" — вправо */
+  .cta {
+    text-align: right;
+    margin-top: 20px;
+  }
+
+  .btn--cta-scroll {
+    width: 127px !important;
+    height: 52px !important;
+    border-radius: 46px !important;
+    gap: 8px !important;
+  }
+
+  /* Секции на странице курса */
+  .course-section:nth-of-type(1) .section-title { /* "Подойдет для вас" */
+    margin-top: -10px !important; /* подтягиваем вверх */
+  }
+
+  .course-section:nth-of-type(2) .section-title { /* "Направления" */
+    margin-top: 20px !important; /* опускаем на 20px */
+  }
+
+  /* Профиль — мобильные стили */
+  .profile-name {
+    width: 283px !important;
+    height: 26px !important;
+    font-weight: 500 !important;
+    font-size: 24px !important;
+  }
+
+  .profile-login {
+    width: 283px !important;
+    height: 18px !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+  }
+
+  .btn-logout {
+    width: 283px !important;
+    height: 50px !important;
+    border-radius: 46px !important;
+    gap: 10px !important;
+    border-width: 1px !important;
+  }
+
+  /* Единый стиль кнопок */
   .btn--login {
     width: 83px !important;
     height: 36px !important;
@@ -142,7 +197,6 @@ button {
   }
 
   .btn--cta,
-  .btn--cta-scroll,
   .btn--cta-login,
   .btn--cta-add {
     width: 127px !important;
@@ -153,7 +207,7 @@ button {
     gap: 8px !important;
   }
 
-  /* Универсальный контейнер на мобильных */
+  /* Универсальный контейнер */
   .container {
     width: 100%;
     padding: 0 16px;

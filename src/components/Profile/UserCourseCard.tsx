@@ -1,3 +1,4 @@
+// src/components/Profile/UserCourseCard.tsx
 import { useState } from 'react';
 import WorkoutModal from './WorkoutModal';
 import type { CourseWithProgress } from '../../api/types';
@@ -14,18 +15,15 @@ interface UserCourseCardProps {
   course: CourseWithProgress;
   onDelete: (id: string) => void;
   getButtonText: (progress: number) => string;
+  onRefetch: () => void;
 }
 
-export function UserCourseCard({ course, onDelete, getButtonText }: UserCourseCardProps) {
+export function UserCourseCard({ course, onDelete, getButtonText, onRefetch }: UserCourseCardProps) {
   const [showModal, setShowModal] = useState(false);
 
-  // Симуляция завершённых тренировок на основе мок-прогресса
-  const workoutIds = course.workouts || [];
-  const completedWorkouts = course.progress === 100
-    ? workoutIds
-    : course.progress > 0
-    ? workoutIds.slice(0, 1)
-    : [];
+  const completedWorkouts = course.workoutsProgress
+    .filter(w => w.workoutCompleted)
+    .map(w => w.workoutId);
 
   return (
     <>
@@ -81,6 +79,8 @@ export function UserCourseCard({ course, onDelete, getButtonText }: UserCourseCa
         onClose={() => setShowModal(false)}
         courseId={course._id}
         completedWorkouts={completedWorkouts}
+        onRefetch={onRefetch}
+        courseName={course.nameRU}
       />
     </>
   );

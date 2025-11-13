@@ -62,4 +62,9 @@ export interface WorkoutProgress {
 
 export interface CourseWithProgress extends Course {
   progress: number;
+  workoutsProgress: {
+    workoutId: string;
+    workoutCompleted: boolean;
+    progressData: number[];
+  }[];
 }

@@ -48,10 +48,15 @@ export default function Passing() {
 
   const saveTempProgress = async () => {
     tempProgress.forEach((value, index) => updateProgress(index, value));
-    setShowProgressModal(false);
     await handleComplete();
+    setShowProgressModal(false);
     setShowSuccessModal(true);
     setTimeout(() => setShowSuccessModal(false), 3000);
+  };
+
+  const closeProgressModal = () => {
+
+    setShowProgressModal(false);
   };
 
   return (
@@ -97,7 +102,7 @@ export default function Passing() {
 
       {/* === Модалка ввода прогресса === */}
       {showProgressModal && (
-        <div className="modal-overlay" onClick={() => setShowProgressModal(false)}>
+        <div className="modal-overlay" onClick={closeProgressModal}>
           <div className="progress-modal" onClick={e => e.stopPropagation()}>
             <h3 className="progress-modal-title">Ваш прогресс</h3>
             <div className="progress-form">
